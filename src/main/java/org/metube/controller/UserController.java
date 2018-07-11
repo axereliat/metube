@@ -4,6 +4,7 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.metube.bindingModel.UserRegisterBindingModel;
 import org.metube.entity.Role;
 import org.metube.entity.User;
+import org.metube.enumeration.Gender;
 import org.metube.service.RoleService;
 import org.metube.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -16,9 +17,17 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Controller
 public class UserController {
@@ -33,6 +42,12 @@ public class UserController {
         this.roleService = roleService;
     }
 
+    private String getFileExtension(String originalFilename) {
+        int dotIndex = originalFilename.lastIndexOf('.');
+
+        return originalFilename.substring(dotIndex);
+    }
+
     @GetMapping("/register")
     public String register(Model model) {
         model.addAttribute("view", "user/register");
@@ -40,10 +55,10 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public String register(UserRegisterBindingModel userRegisterBindingModel, RedirectAttributes redirAttrs) {
+    public String register(UserRegisterBindingModel userRegisterBindingModel, RedirectAttributes redirAttrs, MultipartFile avatar) {
         String error = null;
 
-        if (userRegisterBindingModel.getUsername().equals("") || userRegisterBindingModel.getPassword().equals("")) {
+        if (userRegisterBindingModel.getUsername().equals("") || userRegisterBindingModel.getPassword().equals("") || userRegisterBindingModel.getBirthdate().equals("")) {
             error = "Please fill in all fields.";
             redirAttrs.addFlashAttribute("error", error);
             redirAttrs.addFlashAttribute("username", userRegisterBindingModel.getUsername());
@@ -77,7 +92,28 @@ public class UserController {
         Role role = this.roleService.findByName("USER");
         user.addRole(role);
 
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
+        LocalDate parsedDate = LocalDate.parse(userRegisterBindingModel.getBirthdate(), formatter);
+
+        user.setBirthdate(parsedDate);
+
+        user.setGender(Gender.valueOf(userRegisterBindingModel.getGender().toUpperCase()));
+
         this.userService.registerUser(user);
+        try {
+            // Get the file and save it somewhere
+            byte[] bytes = avatar.getBytes();
+            String property = System.getProperty("user.dir");
+            String fileName = "avatar_" + user.getId() + getFileExtension(avatar.getOriginalFilename());
+            Path path = Paths.get(property + "/src/main/resources/avatars/" + fileName);
+            Files.write(path, bytes);
+            user.setAvatar(fileName);
+
+            this.userService.registerUser(user);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         redirAttrs.addFlashAttribute("success", "You have successfully registered");
 
         return "redirect:/login";

@@ -1,6 +1,9 @@
 package org.metube.entity;
 
+import org.metube.enumeration.Gender;
+
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -13,6 +16,12 @@ public class User {
     private String username;
 
     private String password;
+
+    private LocalDate birthdate;
+
+    private Gender gender;
+
+    private String avatar;
 
     private Set<Role> roles;
 
@@ -62,6 +71,30 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     @ManyToMany(fetch = FetchType.EAGER)
