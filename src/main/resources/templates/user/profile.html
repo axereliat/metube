@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>$Title$</title>
-</head>
-<body>
-$END$
-</body>
-</html>
+<div class="jumbotron">
+    <h1 th:text="${user.username}"></h1>
+    <img th:src="@{/avatars/{avatar}(avatar=${user.avatar})}" width="20%" height="20%" alt="avatar">
+    <br/>
+    Birthdate: <p th:text="${#temporals.format(user.birthdate, 'dd/MMM/yyyy')}"></p>
+</div>

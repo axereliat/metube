@@ -10,19 +10,27 @@
         </div>
         <div class="col-lg-6">
             <th:block th:if="${user.isPublisher(video) || user.isAdmin()}">
-                <a th:href="@{/videos/edit/{id}(id=${video.id})}" class="btn btn-secondary mb-2">Edit</a> <a th:href="@{/videos/delete/{id}(id=${video.id})}" class="btn btn-danger mb-2">Delete</a>
+                <a th:href="@{/videos/edit/{id}(id=${video.id})}" class="btn btn-secondary mb-2">Edit</a> <a
+                    th:href="@{/videos/delete/{id}(id=${video.id})}" class="btn btn-danger mb-2">Delete</a>
             </th:block>
             <h3>Tags:</h3>
             <th:block th:each="tag : ${video.tags}">
                 <button type="button" class="btn btn-outline-primary" th:text="${tag.name}"></button>
             </th:block>
             <h3>Description</h3>
-            <p th:text="${video.description}"></p>
+            <p id="summary" th:text="${video.getSummary()}"></p>
+            <p id="full-text" th:text="${video.description}"></p>
+            <button id="show-more-btn" class="btn btn-secondary mb-2">Show more</button>
+
             <h3>Published by:</h3>
             <p th:text="${video.publisher.username}"></p>
         </div>
-        <a name="heart" th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}" th:unless="${user.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 unliked"></i></a>
-        <a name="heart" th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}" th:if="${user.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 liked"></i></a>
+        <a name="heart"
+           th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}"
+           th:unless="${user.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 unliked"></i></a>
+        <a name="heart"
+           th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}"
+           th:if="${user.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 liked"></i></a>
 
         <!--<a name="heart"><i class="fa fa-heart mt-3 liked"></i></a>-->
 
@@ -52,9 +60,14 @@
                     <a th:name="|comment-${comment.id}|"></a>
                     <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                         <div class="d-flex justify-content-between align-items-center w-100">
-                            <strong class="text-gray-dark"
-                                    th:text="|${comment.getAuthor().getUsername()} - ${#temporals.format(comment.getAddedOn(), 'dd/MM/yyyy HH:mm:ss')}|"></strong>
-                            <a th:id="|comment-delete-${comment.id}|" class="btn btn-danger" th:if="${user.isAuthorOfComment(comment) || user.isPublisher(video)}" th:href="@{/videos/comments/delete/{commentId}/{videoId}/{categoryId}(commentId=${comment.id},videoId=${video.id},categoryId=${video.getCategory().getId()})}">Delete</a>
+                            <strong th:text="${comment.getAuthor().getUsername()}"></strong>
+                            <span class="text-gray-dark timeago"
+                                  th:datetime="${#temporals.format(comment.getAddedOn(), 'yyyy-MM-dd HH:mm:ss')}"
+                                  th:text="${#temporals.format(comment.getAddedOn(), 'yyyy-MM-dd HH:mm:ss')}"></span>
+                            <a th:id="|comment-delete-${comment.id}|" class="btn btn-danger"
+                               th:if="${user.isAuthorOfComment(comment) || user.isPublisher(video)}"
+                               th:href="@{/videos/comments/delete/{commentId}/{videoId}/{categoryId}(commentId=${comment.id},videoId=${video.id},categoryId=${video.getCategory().getId()})}"><i
+                                    class="fa fa-trash"></i></a>
                         </div>
                         <span class="d-block" th:text="${comment.getContent()}"></span>
                     </div>
@@ -64,10 +77,47 @@
     </div>
 </div>
 
+<script th:src="@{/js/timeago.min.js}"></script>
+
+<script>
+    // document ready function
+    (function ($) {
+        $(function () {
+            var btn = $('#show-more-btn');
+            var summary = $('#summary');
+            var fullText = $('#full-text');
+            fullText.hide();
+            if (summary.html() === fullText.html()) {
+                btn.hide();
+            }
+
+            btn.on('click', function (e) {
+                e.preventDefault();
+                if (summary.is(":hidden")) {
+                    summary.show();
+                    fullText.hide();
+                    $(this).text('Show more');
+                } else {
+                    summary.hide();
+                    fullText.show();
+                    $(this).text('Show less');
+                }
+            })
+        })
+    })(jQuery)
+</script>
+
 <script th:inline="javascript">
     /*<![CDATA[*/
     (function ($) {
         $(function () {
+            function startTimeago() {
+                var nodes = document.querySelectorAll('.timeago');
+                timeago().render(nodes);
+            }
+
+            startTimeago();
+
             var commentForm = $('#postComment');
             commentForm.on('submit', function (e) {
                 e.preventDefault();
@@ -96,18 +146,20 @@
 
                         var deleteBtn = '';
                         if ('1' === canDelete) {
-                            deleteBtn = '<a id="comment-delete-' + commentId + '" class="btn btn-danger" href="/videos/comments/delete/' + commentId + '/' + videoId + '/' + categoryId + '">Delete</a>';
+                            deleteBtn = '<a id="comment-delete-' + commentId + '" class="btn btn-danger" href="/videos/comments/delete/' + commentId + '/' + videoId + '/' + categoryId + '"><i class="fa fa-trash"></i></a>';
                         }
 
                         $('#comments')
                             .prepend($('<div id="comment-' + commentId + '" class="media text-muted pt-3">')
                                 .append($('<div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">')
                                     .append($('<div class="d-flex justify-content-between align-items-center w-100">')
-                                        .append($('<strong class="text-gray-dark">' + username + ' - ' + addedOn + '</strong>' + deleteBtn))
+                                        .append($('<strong>' + username + '</strong>'))
+                                        .append($('<span class="text-gray-dark timeago" datetime="' + addedOn + '">' + addedOn + '</span>' + deleteBtn))
                                     )
                                     .append($('<span class="d-block">' + comment + '</span>'))
                                 )
                             )
+                        startTimeago();
                     },
                     error: function (err) {
                         toastr.error(err.message, 'Error!');
@@ -121,13 +173,12 @@
     })(jQuery)
     /*]]>*/
 </script>
-
 <script th:inline="javascript">
     /*<![CDATA[*/
     (function ($) {
         $(function () {
             var $heart = $('[name=heart]');
-            $heart.on('click', function(e) {
+            $heart.on('click', function (e) {
                 e.preventDefault();
                 var _self = $(this);
                 var url = _self.attr('href');

@@ -16,6 +16,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -46,6 +47,19 @@ public class UserController {
         int dotIndex = originalFilename.lastIndexOf('.');
 
         return originalFilename.substring(dotIndex);
+    }
+
+    @GetMapping("/profile/{id}")
+    public String profile(Model model, @PathVariable Integer id) {
+        User user = this.userService.findById(id);
+        if (user == null) {
+            return "redirect:/";
+        }
+
+        model.addAttribute("user", user);
+        model.addAttribute("view", "user/profile");
+
+        return "base-layout";
     }
 
     @GetMapping("/register")
@@ -105,7 +119,7 @@ public class UserController {
             byte[] bytes = avatar.getBytes();
             String property = System.getProperty("user.dir");
             String fileName = "avatar_" + user.getId() + getFileExtension(avatar.getOriginalFilename());
-            Path path = Paths.get(property + "/src/main/resources/avatars/" + fileName);
+            Path path = Paths.get(property + "/src/main/resources/static/avatars/" + fileName);
             Files.write(path, bytes);
             user.setAvatar(fileName);
 

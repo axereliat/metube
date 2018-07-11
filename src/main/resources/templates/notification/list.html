@@ -2,9 +2,14 @@
     <a th:href="@{/notifications/clear}" class="btn btn-warning mb-2">Clear all</a>
     <ul id="notifications" class="list-group">
         <li th:id="|item-${notification.id}|" class="list-group-item" th:each="notification : ${notifications}">
-            <a th:id="${notification.id}" style="color:black" th:href="@{/videos/details/{id}?category={categoryId}(id=${notification.getVideo().getId()},categoryId=${notification.getVideo().getCategory().getId()})}" th:text="|${notification.content} - ${#temporals.format(notification.addedOn, 'dd/MM/yyyy HH:mm:ss')}|"></a>
+            <a th:id="${notification.id}" style="color:black" th:href="@{/videos/details/{id}?category={categoryId}(id=${notification.getVideo().getId()},categoryId=${notification.getVideo().getCategory().getId()})}"
+               th:text="|${notification.content} - |"></a>
+            <span class="text-gray-dark timeago text-center" th:datetime="${#temporals.format(notification.getAddedOn(), 'yyyy-MM-dd HH:mm:ss')}"
+                  th:text="${#temporals.format(notification.addedOn, 'yyyy-MM-dd HH:mm:ss')}"></span>
             <div class="float-right">
-                <a th:href="@{/notifications/delete/{id}(id=${notification.id})}" class="notification-delete text-danger"><i class="fa fa-close"></i></a>
+                <a th:href="@{/notifications/delete/{id}(id=${notification.id})}" class="notification-delete text-danger">
+                    <i class="fa fa-close"></i>
+                </a>
             </div>
         </li>
     </ul>
@@ -12,11 +17,19 @@
     <h3 id="no-notifications"></h3>
 </div>
 
+<script th:src="@{/js/timeago.min.js}"></script>
+
 <script>
     /*<![CDATA[*/
     (function ($) {
         'use strict';
         $(function () {
+            function startTimeago() {
+                var nodes = document.querySelectorAll('.timeago');
+                timeago().render(nodes);
+            }
+
+            startTimeago();
             $('.notification-delete').on('click', function (e) {
                 e.preventDefault();
                 var _self = $(this);

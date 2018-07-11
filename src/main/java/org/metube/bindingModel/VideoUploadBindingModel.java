@@ -11,6 +11,7 @@ public class VideoUploadBindingModel {
     private String title;
 
     @NotEmpty(message = "Please enter a description.")
+    @Size(max = 1000, message = "Description must not be longer than 200 symbols")
     private String description;
 
     @NotEmpty(message = "Please enter a youtube link.")

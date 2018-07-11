@@ -131,4 +131,14 @@ public class Video {
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
     }
+
+    @Transient
+    public String getSummary() {
+        final int maxSymbols = 50;
+
+        if (this.description.length() > maxSymbols) {
+            return this.description.substring(0, maxSymbols) + "...";
+        }
+        return this.description;
+    }
 }
