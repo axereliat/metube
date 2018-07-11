@@ -1,0 +1,10 @@
+<div class="jumbotron">
+    <form th:action="@{/admin/categories/create}" method="post">
+        <h1>Create Category</h1>
+        <div class="form-group">
+            <label for="name">Name: </label>
+            <input type="text" name="name" id="name" required /> <br/>
+        </div>
+        <input type="submit" value="Create" class="btn-primary" />
+    </form>
+</div>

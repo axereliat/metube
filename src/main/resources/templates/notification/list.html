@@ -1,0 +1,42 @@
+<div class="jumbotron">
+    <a th:href="@{/notifications/clear}" class="btn btn-warning mb-2">Clear all</a>
+    <ul id="notifications" class="list-group">
+        <li th:id="|item-${notification.id}|" class="list-group-item" th:each="notification : ${notifications}">
+            <a th:id="${notification.id}" style="color:black" th:href="@{/videos/details/{id}?category={categoryId}(id=${notification.getVideo().getId()},categoryId=${notification.getVideo().getCategory().getId()})}" th:text="|${notification.content} - ${#temporals.format(notification.addedOn, 'dd/MM/yyyy HH:mm:ss')}|"></a>
+            <div class="float-right">
+                <a th:href="@{/notifications/delete/{id}(id=${notification.id})}" class="notification-delete text-danger"><i class="fa fa-close"></i></a>
+            </div>
+        </li>
+    </ul>
+    <h3 th:if="${notifications.size() == 0}">No notifications...</h3>
+    <h3 id="no-notifications"></h3>
+</div>
+
+<script>
+    /*<![CDATA[*/
+    (function ($) {
+        'use strict';
+        $(function () {
+            $('.notification-delete').on('click', function (e) {
+                e.preventDefault();
+                var _self = $(this);
+                var url = _self.attr('href');
+                $.ajax({
+                    method: 'get',
+                    url: url,
+                    dataType: 'json',
+                    success: function (res) {
+                        $('#item-' + res.id).remove();
+                        if ($('#notifications li').length == 0) {
+                            $('#no-notifications').append('No notifications...');
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+        });
+    })(jQuery);
+    /*]]>*/
+</script>

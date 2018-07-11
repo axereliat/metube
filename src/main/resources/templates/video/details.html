@@ -1,0 +1,185 @@
+<div class="jumbotron">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1 th:text="${video.title}"></h1>
+            <div class="embed-responsive embed-responsive-16by9">
+                <iframe class="embed-responsive-item"
+                        th:src="@{https://www.youtube.com/embed/{url}(url=${video.youtubeId})}"
+                        allowfullscreen></iframe>
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <th:block th:if="${user.isPublisher(video) || user.isAdmin()}">
+                <a th:href="@{/videos/edit/{id}(id=${video.id})}" class="btn btn-secondary mb-2">Edit</a> <a th:href="@{/videos/delete/{id}(id=${video.id})}" class="btn btn-danger mb-2">Delete</a>
+            </th:block>
+            <h3>Tags:</h3>
+            <th:block th:each="tag : ${video.tags}">
+                <button type="button" class="btn btn-outline-primary" th:text="${tag.name}"></button>
+            </th:block>
+            <h3>Description</h3>
+            <p th:text="${video.description}"></p>
+            <h3>Published by:</h3>
+            <p th:text="${video.publisher.username}"></p>
+        </div>
+        <a name="heart" th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}" th:unless="${user.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 unliked"></i></a>
+        <a name="heart" th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}" th:if="${user.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 liked"></i></a>
+
+        <!--<a name="heart"><i class="fa fa-heart mt-3 liked"></i></a>-->
+
+    </div>
+    <h3 id="likesCount" th:text="|${video.getUsersLiked().size()} likes|"></h3>
+
+    <a th:href="@{/videos/{categoryId}(categoryId = ${categoryId})}" class="btn btn-secondary mt-3"><i
+            class="fa fa-undo"></i> Back</a>
+    <form id="postComment"
+          th:action="@{/videos/details/{id}?category={categoryId}(id=${video.id},categoryId=${video.getCategory().getId()})}"
+          method="post">
+        <div class="col-md-6 mt-4">
+            <div class="form-group">
+                <label for="comment">Add Comment: </label>
+                <textarea class="form-control" rows="6" id="comment" placeholder="Comment..."
+                          name="comment" required></textarea>
+            </div>
+            <button id="commentBtn" type="submit" class="btn btn-primary"><i class="fa fa-save"></i> Submit</button>
+            <br/>
+        </div>
+    </form>
+    <div class="my-3 p-3 bg-white rounded box-shadow">
+        <h6 class="border-bottom border-gray pb-2 mb-0">Comments</h6>
+        <div id="comments">
+            <th:block th:each="comment : ${comments}">
+                <div th:id="|comment-${comment.id}|" class="media text-muted pt-3">
+                    <a th:name="|comment-${comment.id}|"></a>
+                    <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <div class="d-flex justify-content-between align-items-center w-100">
+                            <strong class="text-gray-dark"
+                                    th:text="|${comment.getAuthor().getUsername()} - ${#temporals.format(comment.getAddedOn(), 'dd/MM/yyyy HH:mm:ss')}|"></strong>
+                            <a th:id="|comment-delete-${comment.id}|" class="btn btn-danger" th:if="${user.isAuthorOfComment(comment) || user.isPublisher(video)}" th:href="@{/videos/comments/delete/{commentId}/{videoId}/{categoryId}(commentId=${comment.id},videoId=${video.id},categoryId=${video.getCategory().getId()})}">Delete</a>
+                        </div>
+                        <span class="d-block" th:text="${comment.getContent()}"></span>
+                    </div>
+                </div>
+            </th:block>
+        </div>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    (function ($) {
+        $(function () {
+            var commentForm = $('#postComment');
+            commentForm.on('submit', function (e) {
+                e.preventDefault();
+
+                $('#commentBtn').attr('disabled', 'disabled').html('please wait...');
+
+                $.ajax({
+                    method: 'post',
+                    url: commentForm.attr('action'),
+                    dataType: 'json',
+                    data: {
+                        _csrf: $('input[name="_csrf"]').val(),
+                        comment: $('#comment').val()
+                    },
+                    success: function (res) {
+                        $('#comment').val('');
+                        toastr.success('Comment is posted!', 'Success');
+
+                        var commentId = res.commentId;
+                        var videoId = res.videoId;
+                        var categoryId = res.categoryId;
+                        var username = res.username;
+                        var addedOn = res.addedOn;
+                        var comment = res.comment;
+                        var canDelete = res.canDelete;
+
+                        var deleteBtn = '';
+                        if ('1' === canDelete) {
+                            deleteBtn = '<a id="comment-delete-' + commentId + '" class="btn btn-danger" href="/videos/comments/delete/' + commentId + '/' + videoId + '/' + categoryId + '">Delete</a>';
+                        }
+
+                        $('#comments')
+                            .prepend($('<div id="comment-' + commentId + '" class="media text-muted pt-3">')
+                                .append($('<div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">')
+                                    .append($('<div class="d-flex justify-content-between align-items-center w-100">')
+                                        .append($('<strong class="text-gray-dark">' + username + ' - ' + addedOn + '</strong>' + deleteBtn))
+                                    )
+                                    .append($('<span class="d-block">' + comment + '</span>'))
+                                )
+                            )
+                    },
+                    error: function (err) {
+                        toastr.error(err.message, 'Error!');
+                    },
+                    complete: function () {
+                        $('#commentBtn').removeAttr('disabled').html('<i class="fa fa-save"></i> Submit');
+                    }
+                })
+            })
+        })
+    })(jQuery)
+    /*]]>*/
+</script>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    (function ($) {
+        $(function () {
+            var $heart = $('[name=heart]');
+            $heart.on('click', function(e) {
+                e.preventDefault();
+                var _self = $(this);
+                var url = _self.attr('href');
+
+                $.ajax({
+                    method: 'get',
+                    url: url,
+                    dataType: 'json',
+                    success: function (res) {
+                        var $current = $heart.find('.fa-heart')
+                        if (res.liked === "1") {
+                            $current.removeClass('unliked').addClass('liked')
+                            toastr.success('Video liked!', "Success");
+                        } else {
+                            $current.removeClass('liked').addClass('unliked')
+                            toastr.success('Video unliked!', "Success");
+                        }
+
+                        $('#likesCount').html(res.likesCount + ' likes')
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+
+            $('#comments').on('click', '[id^="comment-delete-"]', function (e) {
+                e.preventDefault();
+                var _self = $(e.target);
+                var url = _self.attr('href');
+
+                if (confirm('Are you sure you want to delete this comment?')) {
+                    $.ajax({
+                        method: 'get',
+                        url: url,
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.error === "1") {
+                                toastr.error(res.message, "Error");
+                            } else {
+                                toastr.success('Deleted successfully!', 'Success');
+                                $('#comment-' + res.commentId).remove();
+                            }
+                        },
+                        error: function (err) {
+                            console.log(err);
+                        }
+                    });
+                }
+            });
+
+        })
+    })(jQuery)
+    /*]]>*/
+</script>

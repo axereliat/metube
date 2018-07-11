@@ -1,0 +1,11 @@
+<div class="jumbotron">
+    <h1>Metube is a simple video-sharing website</h1>
+    <h2 sec:authorize="isAnonymous()"><a href="/login">Login</a> if you have an account or <a href="/register">register</a> if you don't!</h2>
+    <hr/>
+    <h1>Select which category you would like to watch</h1>
+    <div class="row">
+        <div class="col-md-4" th:each="category : ${categories}">
+            <a th:href="@{/videos/{id}(id=${category.id})}"><h2 th:text="${category.name + '(' + category.getVideos().size() + ')'}"></h2></a>
+        </div>
+    </div>
+</div>

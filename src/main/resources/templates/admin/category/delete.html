@@ -1,0 +1,10 @@
+<div class="jumbotron">
+    <form th:action="@{/admin/categories/delete/{id}(id=${category.id})}" method="post">
+        <h1>Delete Category</h1>
+        <div class="form-group">
+            <label for="name">Name: </label>
+            <input type="text" name="name" id="name" th:value="${category.name}" disabled /> <br/>
+        </div>
+        <input type="submit" value="Delete" class="btn-primary" />
+    </form>
+</div>

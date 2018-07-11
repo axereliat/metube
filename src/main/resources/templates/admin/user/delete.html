@@ -1,0 +1,16 @@
+<div class="jumbotron">
+    <form method="post" th:action="@{/admin/users/delete/{id}(id=${user.id})}">
+        <h1>Delete User</h1>
+        <div class="form-group">
+            <label for="username">Username: </label>
+            <input type="text" name="username" id="username" th:value="${user.username}" disabled/> <br/>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password: </label>
+            <input type="text" name="password" id="password" th:value="${user.password}" disabled /> <br/>
+        </div>
+
+        <input type="submit" value="Delete" class="btn-primary" />
+    </form>
+</div>
