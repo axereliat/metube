@@ -1,6 +1,7 @@
 package org.metube.controller;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
+import org.metube.bindingModel.UserProfileEditBindingModel;
 import org.metube.bindingModel.UserRegisterBindingModel;
 import org.metube.entity.Role;
 import org.metube.entity.User;
@@ -9,8 +10,12 @@ import org.metube.service.RoleService;
 import org.metube.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
@@ -29,6 +34,7 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Collection;
 
 @Controller
 public class UserController {
@@ -131,6 +137,68 @@ public class UserController {
         redirAttrs.addFlashAttribute("success", "You have successfully registered");
 
         return "redirect:/login";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/edit")
+    public String edit(Model model) {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        User userEntity = this.userService.findByUsername(user.getUsername());
+
+        model.addAttribute("user", userEntity);
+        model.addAttribute("view", "user/edit");
+
+        return "base-layout";
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @PostMapping("/edit")
+    public String editProcess(UserProfileEditBindingModel userProfileEditBindingModel, RedirectAttributes redirectAttributes, MultipartFile avatar) {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        User userEntity = this.userService.findByUsername(user.getUsername());
+
+        if (!userProfileEditBindingModel.getOldPassword().equals("")) {
+            BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
+            //String oldPasswordEncrypted = bCryptPasswordEncoder.matches(userProfileEditBindingModel.getOldPassword());
+
+            if (!bCryptPasswordEncoder.matches(userProfileEditBindingModel.getOldPassword(), userEntity.getPassword())) {
+                redirectAttributes.addFlashAttribute("error", "Incorrect old password!");
+                return "redirect:/edit";
+            } else {
+                userEntity.setPassword(bCryptPasswordEncoder.encode(userProfileEditBindingModel.getNewPassword()));
+            }
+        }
+
+        if (!avatar.getOriginalFilename().equals("")) {
+            try {
+                // Get the file and save it somewhere
+                byte[] bytes = avatar.getBytes();
+                String property = System.getProperty("user.dir");
+                String fileName = "avatar_" + userEntity.getId() + this.getFileExtension(avatar.getOriginalFilename());
+                Path path = Paths.get(property + "/src/main/resources/static/avatars/" + fileName);
+                Files.write(path, bytes);
+                userEntity.setAvatar(fileName);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (!userProfileEditBindingModel.getNewUsername().equals("")) {
+            if (!userProfileEditBindingModel.getNewUsername().equals(userEntity.getUsername())) {
+                if (this.userService.existsUserWithUsername(userProfileEditBindingModel.getNewUsername())) {
+                    redirectAttributes.addFlashAttribute("error", "Username is already taken!");
+                    return "redirect:/edit";
+                }
+            }
+            userEntity.setUsername(userProfileEditBindingModel.getNewUsername());
+        }
+        this.userService.registerUser(userEntity);
+
+        redirectAttributes.addFlashAttribute("success", "Profile successfully edited!");
+
+        return "redirect:/logout";
     }
 
     @GetMapping("/login")

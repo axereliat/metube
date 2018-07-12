@@ -11,9 +11,12 @@
                     <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/videos/upload" sec:authorize="isAuthenticated()">Upload Video</a>
                 </li>
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/notifications/" sec:authorize="isAuthenticated()">Notifications<span class="badge badge-light">4</span></a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" th:href="@{/profile/{id}(id=${user.id})}" sec:authorize="isAuthenticated()">Profile</a>
                 </li>
-                <li class="nav-item dropdown" sec:authorize="hasAuthority('ADMIN')">
+                <li class="nav-item mx-0 mx-lg-1">
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/notifications/" sec:authorize="isAuthenticated()">Notifications<span id="notification-count" class="badge badge-light" th:text="${user.notifications.size()}"></span></a>
+                </li>
+                <li class="nav-item dropdown mt-2" sec:authorize="hasAuthority('ADMIN')">
                     <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         Admin
                     </a>
@@ -29,7 +32,7 @@
                     <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/login" sec:authorize="isAnonymous()">Login</a>
                 </li>
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/logout" sec:authorize="isAuthenticated()">Logout</a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger btn btn-danger" href="/logout" sec:authorize="isAuthenticated()">Logout</a>
                 </li>
             </ul>
         </div>

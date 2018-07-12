@@ -194,6 +194,7 @@ public class VideoController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");;
         map.put("addedOn", commentEntity.getAddedOn().format(formatter));
         map.put("comment", commentEntity.getContent());
+        map.put("avatar", commentEntity.getAuthor().getAvatar());
         boolean canDelete = userEntity.isAuthorOfComment(commentEntity) || userEntity.isPublisher(videoService.findVideoById(id));
         map.put("canDelete", canDelete ? "1" : "0");
 

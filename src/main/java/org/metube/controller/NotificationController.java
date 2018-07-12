@@ -10,10 +10,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
@@ -29,6 +26,15 @@ public class NotificationController {
     public NotificationController(NotificationService notificationService, UserService userService) {
         this.userService = userService;
         this.notificationService = notificationService;
+    }
+
+    @ModelAttribute
+    public void populateModel(Model model) {
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        User userEntity = this.userService.findByUsername(user.getUsername());
+
+        model.addAttribute("user", userEntity);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -67,6 +73,11 @@ public class NotificationController {
         this.notificationService.deleteById(id);
         Map<String, String> map = new HashMap<>();
         map.put("id", id.toString());
+        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
+                .getAuthentication().getPrincipal();
+        User userEntity = this.userService.findByUsername(user.getUsername());
+
+        map.put("notificationCount", String.valueOf(userEntity.getNotifications().size()));
         return map;
     }
 
