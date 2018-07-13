@@ -33,6 +33,7 @@ public class CategoryController {
 
     @GetMapping("/create")
     public String create(Model model) {
+        model.addAttribute("title", "Add category");
         model.addAttribute("view", "/admin/category/create");
 
         return "base-layout";
@@ -55,6 +56,7 @@ public class CategoryController {
             return "redirect:/admin/categories/";
         }
 
+        model.addAttribute("title", "Delete category");
         model.addAttribute("category", category);
         model.addAttribute("view", "/admin/category/delete");
 
@@ -82,6 +84,7 @@ public class CategoryController {
             return "redirect:/admin/categories/";
         }
 
+        model.addAttribute("title", "Edit category");
         model.addAttribute("category", category);
         model.addAttribute("view", "/admin/category/edit");
 

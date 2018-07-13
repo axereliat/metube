@@ -62,6 +62,7 @@ public class UserController {
             return "redirect:/";
         }
 
+        model.addAttribute("title", "Profile of " + user.getUsername());
         model.addAttribute("user", user);
         model.addAttribute("view", "user/profile");
 
@@ -70,6 +71,7 @@ public class UserController {
 
     @GetMapping("/register")
     public String register(Model model) {
+        model.addAttribute("title", "Register");
         model.addAttribute("view", "user/register");
         return "base-layout";
     }
@@ -146,6 +148,7 @@ public class UserController {
                 .getAuthentication().getPrincipal();
         User userEntity = this.userService.findByUsername(user.getUsername());
 
+        model.addAttribute("title", "Edit profile");
         model.addAttribute("user", userEntity);
         model.addAttribute("view", "user/edit");
 
@@ -203,6 +206,7 @@ public class UserController {
 
     @GetMapping("/login")
     public String login(Model model) {
+        model.addAttribute("title", "Login");
         model.addAttribute("view", "user/login");
 
         return "base-layout";

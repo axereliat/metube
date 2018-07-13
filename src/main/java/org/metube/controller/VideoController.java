@@ -91,6 +91,7 @@ public class VideoController {
 
         int pages = allVideosByCategory.size() / VIDEOS_PER_PAGE;
 
+        model.addAttribute("title", "List videos");
         model.addAttribute("search", search);
         model.addAttribute("categoryId", id);
         model.addAttribute("videos", videos);
@@ -103,6 +104,7 @@ public class VideoController {
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/upload")
     public String upload(Model model) {
+        model.addAttribute("title", "Upload video");
         model.addAttribute("video", new VideoUploadBindingModel());
         model.addAttribute("categories", this.categoryService.findAll());
         model.addAttribute("view", "/video/upload");
@@ -155,6 +157,8 @@ public class VideoController {
                 .getAuthentication().getPrincipal();
 
         User userEntity = this.userRepository.findByUsername(user.getUsername());
+
+        model.addAttribute("title", "Details");
         model.addAttribute("user", userEntity);
         model.addAttribute("comments", comments);
         model.addAttribute("categoryId", category);
@@ -276,6 +280,7 @@ public class VideoController {
         String[] tagNames = video.getTags().stream().map(Tag::getName).toArray(String[]::new);
         videoEditViewModel.setTagStr(String.join(", ", tagNames));
 
+        model.addAttribute("title", "Edit video");
         model.addAttribute("video", videoEditViewModel);
         model.addAttribute("categories", this.categoryService.findAll());
         model.addAttribute("view", "/video/edit");
@@ -338,6 +343,7 @@ public class VideoController {
         String[] tagNames = video.getTags().stream().map(Tag::getName).toArray(String[]::new);
         videoEditViewModel.setTagStr(String.join(", ", tagNames));
 
+        model.addAttribute("title", "Delete video");
         model.addAttribute("video", videoEditViewModel);
         model.addAttribute("categories", this.categoryService.findAll());
         model.addAttribute("view", "/video/delete");

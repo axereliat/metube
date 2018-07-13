@@ -28,15 +28,6 @@ public class NotificationController {
         this.notificationService = notificationService;
     }
 
-    @ModelAttribute
-    public void populateModel(Model model) {
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        User userEntity = this.userService.findByUsername(user.getUsername());
-
-        model.addAttribute("user", userEntity);
-    }
-
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/")
     public String list(Model model) {
@@ -51,6 +42,7 @@ public class NotificationController {
         //}
         //userEntity.clearNotifications();
 
+        model.addAttribute("title", "List notifications");
         model.addAttribute("notifications", Arrays.asList(notifications.stream().sorted((x1, x2) -> x2.getAddedOn().compareTo(x1.getAddedOn())).toArray(Notification[]::new)));
         model.addAttribute("view", "notification/list");
 
