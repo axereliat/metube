@@ -1,4 +1,4 @@
-package org.metube.interceptors;
+package org.metube.interceptor;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.ModelAndView;

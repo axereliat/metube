@@ -13,7 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@ControllerAdvice(annotations = Controller.class)
+//@ControllerAdvice(annotations = Controller.class)
 public class HomeController {
 
     private final CategoryService categoryService;
@@ -26,7 +26,7 @@ public class HomeController {
         this.userService = userServicey;
     }
 
-    @ModelAttribute
+    //@ModelAttribute
     public void populateModel(Model model) {
         final Object principal = SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -48,7 +48,6 @@ public class HomeController {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFound(Model model) {
-        model.addAttribute("view", "error/404");
-        return "base-layout";
+        return "error/404";
     }
 }

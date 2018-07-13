@@ -2,6 +2,7 @@ package org.metube.controller;
 
 import org.metube.bindingModel.VideoUploadBindingModel;
 import org.metube.entity.*;
+import org.metube.exception.ResourceNotFoundException;
 import org.metube.repository.UserRepository;
 import org.metube.service.*;
 import org.metube.viewModel.VideoEditViewModel;
@@ -18,6 +19,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -152,6 +154,11 @@ public class VideoController {
     @GetMapping("/details/{id}")
     public String details(Model model, @PathVariable Integer id, Integer category) {
         Video video = this.videoService.findVideoById(id);
+
+        if (video == null) {
+            throw new ResourceNotFoundException();
+        }
+
         List<Comment> comments = video.getComments().stream().sorted((x1, x2) -> x2.getAddedOn().compareTo(x1.getAddedOn())).collect(Collectors.toList());
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -171,6 +178,10 @@ public class VideoController {
     @RequestMapping(value="/details/{id}", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Map<String, String> addingCommentProcess(Model model, @PathVariable Integer id, Integer category, String comment) {
         Video video = this.videoService.findVideoById(id);
+
+        if (video == null) {
+            throw new ResourceNotFoundException();
+        }
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -209,7 +220,14 @@ public class VideoController {
     @GetMapping(value = "/comments/delete/{commentId}/{videoId}/{categoryId}", produces = "application/json")
     public @ResponseBody Map<String, String> deleteComment(RedirectAttributes redirectAttributes, @PathVariable Integer commentId, @PathVariable Integer videoId, @PathVariable Integer categoryId) {
         Video video = this.videoService.findVideoById(videoId);
+        if (video == null) {
+            throw new ResourceNotFoundException();
+        }
         Comment comment = this.commentService.findById(commentId);
+
+        if (comment == null) {
+            throw new ResourceNotFoundException();
+        }
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -271,6 +289,10 @@ public class VideoController {
     public String edit(Model model, @PathVariable Integer id) {
         Video video = this.videoService.findVideoById(id);
 
+        if (video == null) {
+            throw new ResourceNotFoundException();
+        }
+
         VideoEditViewModel videoEditViewModel = new VideoEditViewModel();
         videoEditViewModel.setTitle(video.getTitle());
         videoEditViewModel.setDescription(video.getDescription());
@@ -301,6 +323,10 @@ public class VideoController {
         }
 
         Video video = this.videoService.findVideoById(id);
+
+        if (video == null) {
+            throw new ResourceNotFoundException();
+        }
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -334,6 +360,10 @@ public class VideoController {
     public String delete(Model model, @PathVariable Integer id) {
         Video video = this.videoService.findVideoById(id);
 
+        if (video == null) {
+            throw new ResourceNotFoundException();
+        }
+
         VideoEditViewModel videoEditViewModel = new VideoEditViewModel();
         videoEditViewModel.setTitle(video.getTitle());
         videoEditViewModel.setDescription(video.getDescription());
@@ -355,6 +385,10 @@ public class VideoController {
     @PostMapping("/delete/{id}")
     public String deleteProcess(VideoUploadBindingModel videoUploadBindingModel, RedirectAttributes redirectAttributes, @PathVariable Integer id) {
         Video video = this.videoService.findVideoById(id);
+        
+        if (video == null) {
+            throw new ResourceNotFoundException();
+        }
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();

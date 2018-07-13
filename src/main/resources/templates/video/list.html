@@ -17,7 +17,7 @@
     </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination mt-4">
-            <th:block th:each="page : ${#numbers.sequence(1, pages + 1)}">
+            <th:block th:each="page : ${#numbers.sequence(1, pages + 1)}" th:if="${pages > 0}">
                 <li class="page-item"><a class="page-link" th:href="@{/videos/{id}?page={page}&search={search}(id=${categoryId},page=${page},search=${search})}" th:text="${page}"></a></li>
             </th:block>
         </ul>
