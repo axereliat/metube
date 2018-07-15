@@ -50,4 +50,9 @@ public class HomeController {
     public String notFound(Model model) {
         return "error/404";
     }
+
+    @GetMapping("/error/403")
+    public String forbidden(Model model) {
+        return "error/403";
+    }
 }

@@ -40,6 +40,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().accessDeniedPage("/error/403")
                 .and()
+                .rememberMe()
+                .rememberMeParameter("remember")
+                .key("remember Me Encryption Key")
+                .rememberMeCookieName("rememberMe")
+                .tokenValiditySeconds(604800) // one week
+                .and()
                 .csrf();
     }
 }

@@ -174,6 +174,10 @@ public class UserController {
             }
         }
 
+        if (!avatar.getOriginalFilename().endsWith(".jpeg") && !avatar.getOriginalFilename().endsWith(".jpg") && !avatar.getOriginalFilename().endsWith(".png")) {
+            redirectAttributes.addFlashAttribute("error", "Only the following formats are allowed: jpeg, jpg, png");
+            return "redirect:/edit";
+        }
         if (!avatar.getOriginalFilename().equals("")) {
             try {
                 // Get the file and save it somewhere

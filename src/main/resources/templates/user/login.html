@@ -16,6 +16,13 @@
 
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="remember" value="remember" id="remember">
+                    <label class="form-check-label mb-3" for="remember">
+                        Remember me
+                    </label>
+                </div>
+
                 <input type="submit" value="Login" class="btn btn-primary"/>
             </div>
         </div>
