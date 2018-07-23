@@ -21,6 +21,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -117,56 +118,20 @@ public class VideoController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/upload")
     public String uploadProcess(@Valid @ModelAttribute VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
-        List<String> errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
-        if (errors.size() > 0) {
-            redirectAttributes.addFlashAttribute("video", videoUploadBindingModel);
-            redirectAttributes.addFlashAttribute("errors", errors);
-            return "redirect:/videos/upload";
-        }
-
-        ModelMapper modelMapper = new ModelMapper();
-        Video video = modelMapper.map(videoUploadBindingModel, Video.class);
-        Category category = this.categoryService.findById(videoUploadBindingModel.getCategoryId());
-        video.setCategory(category);
-        video.setAddedOn(LocalDateTime.now());
-
-        Set<Tag> tags = this.extractTagsFromString(videoUploadBindingModel.getTagStr());
-
-        video.setTags(tags);
-
-        video.setId(this.videoService.findAllVideos().get(this.videoService.findAllVideos().size() - 1).getId() + 1);
-
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        User userEntity = this.userRepository.findByUsername(user.getUsername());
-        video.setPublisher(userEntity);
-
-        video.setYoutubeId(this.extractYoutubeId(videoUploadBindingModel.getLink()));
-
-        this.videoService.uploadVideo(video);
-
-        redirectAttributes.addFlashAttribute("success", "You have successfully uploaded your video,");
-
-        return "redirect:/";
+        return videoService.uploadVideo(videoUploadBindingModel, bindingResult, redirectAttributes);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/details/{id}")
-    public String details(Model model, @PathVariable Integer id, Integer category) {
+    public String details(Model model, @PathVariable Integer id, Integer category, Principal principal) {
         Video video = this.videoService.findVideoById(id);
 
-        if (video == null) {
-            throw new ResourceNotFoundException();
-        }
-
         List<Comment> comments = video.getComments().stream().sorted((x1, x2) -> x2.getAddedOn().compareTo(x1.getAddedOn())).collect(Collectors.toList());
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
 
-        User userEntity = this.userRepository.findByUsername(user.getUsername());
+        User userEntity = this.userRepository.findByUsername(principal.getName());
 
         model.addAttribute("title", "Details");
-        model.addAttribute("user", userEntity);
+        model.addAttribute("currentUser", userEntity);
         model.addAttribute("comments", comments);
         model.addAttribute("categoryId", category);
         model.addAttribute("video", video);
@@ -178,10 +143,6 @@ public class VideoController {
     @RequestMapping(value="/details/{id}", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody Map<String, String> addingCommentProcess(Model model, @PathVariable Integer id, Integer category, String comment) {
         Video video = this.videoService.findVideoById(id);
-
-        if (video == null) {
-            throw new ResourceNotFoundException();
-        }
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -281,17 +242,13 @@ public class VideoController {
         map.put("liked", userEntity.hasLikedVideo(video) ? "1" : "0");
         map.put("likesCount", String.valueOf(video.getUsersLiked().size()));
         return map;
-//        return "redirect:/videos/details/" + videoId + "?category=" + categoryId;
+        //return this.videoService.likeVideo(redirectAttributes, videoId, categoryId);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable Integer id) {
         Video video = this.videoService.findVideoById(id);
-
-        if (video == null) {
-            throw new ResourceNotFoundException();
-        }
 
         VideoEditViewModel videoEditViewModel = new VideoEditViewModel();
         videoEditViewModel.setTitle(video.getTitle());
@@ -313,56 +270,13 @@ public class VideoController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/edit/{id}")
     public String editProcess(@Valid @ModelAttribute VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable Integer id) {
-        List<String> errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
-        if (errors.size() > 0) {
-            VideoEditViewModel videoEditViewModel = new VideoEditViewModel();
-            videoEditViewModel.setTitle("asdasda");
-            redirectAttributes.addFlashAttribute("video", videoEditViewModel);
-            redirectAttributes.addFlashAttribute("errors", errors);
-            return "redirect:/videos/edit/" + id;
-        }
-
-        Video video = this.videoService.findVideoById(id);
-
-        if (video == null) {
-            throw new ResourceNotFoundException();
-        }
-
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        User userEntity = this.userRepository.findByUsername(user.getUsername());
-
-        if (!userEntity.isPublisher(video) && !userEntity.isAdmin()) {
-            return "redirect:/";
-        }
-
-        video.setTitle(videoUploadBindingModel.getTitle());
-        video.setDescription(videoUploadBindingModel.getDescription());
-
-        Category category = this.categoryService.findById(videoUploadBindingModel.getCategoryId());
-        video.setCategory(category);
-
-        Set<Tag> tags = this.extractTagsFromString(videoUploadBindingModel.getTagStr());
-
-        video.setTags(tags);
-
-        video.setYoutubeId(this.extractYoutubeId(videoUploadBindingModel.getLink()));
-
-        this.videoService.uploadVideo(video);
-
-        redirectAttributes.addFlashAttribute("success", "You have successfully edited your video,");
-
-        return "redirect:/videos/details/" + id + "?category=" + video.getCategory().getId();
+        return this.videoService.editVideo(videoUploadBindingModel, bindingResult, redirectAttributes, id);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Integer id) {
         Video video = this.videoService.findVideoById(id);
-
-        if (video == null) {
-            throw new ResourceNotFoundException();
-        }
 
         VideoEditViewModel videoEditViewModel = new VideoEditViewModel();
         videoEditViewModel.setTitle(video.getTitle());
@@ -384,24 +298,6 @@ public class VideoController {
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/delete/{id}")
     public String deleteProcess(VideoUploadBindingModel videoUploadBindingModel, RedirectAttributes redirectAttributes, @PathVariable Integer id) {
-        Video video = this.videoService.findVideoById(id);
-        
-        if (video == null) {
-            throw new ResourceNotFoundException();
-        }
-
-        UserDetails user = (UserDetails) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        User userEntity = this.userRepository.findByUsername(user.getUsername());
-
-        if (!userEntity.isPublisher(video) && !userEntity.isAdmin()) {
-            return "redirect:/";
-        }
-
-        this.videoService.deleteVideoById(video.getId());
-
-        redirectAttributes.addFlashAttribute("success", "You have successfully deleted your video,");
-
-        return "redirect:/videos/" + video.getCategory().getId();
+        return this.videoService.deleteVideo(videoUploadBindingModel, redirectAttributes, id);
     }
 }

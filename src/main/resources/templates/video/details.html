@@ -9,7 +9,7 @@
             </div>
         </div>
         <div class="col-lg-6">
-            <th:block th:if="${user.isPublisher(video) || user.isAdmin()}">
+            <th:block th:if="${currentUser.isPublisher(video) || currentUser.isAdmin()}">
                 <a th:href="@{/videos/edit/{id}(id=${video.id})}" class="btn btn-secondary mb-2">Edit</a> <a
                     th:href="@{/videos/delete/{id}(id=${video.id})}" class="btn btn-danger mb-2">Delete</a>
             </th:block>
@@ -27,10 +27,10 @@
         </div>
         <a name="heart"
            th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}"
-           th:unless="${user.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 unliked"></i></a>
+           th:unless="${currentUser.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 unliked"></i></a>
         <a name="heart"
            th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}"
-           th:if="${user.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 liked"></i></a>
+           th:if="${currentUser.hasLikedVideo(video)}"><i class="fa fa-heart mt-3 liked"></i></a>
 
         <!--<a name="heart"><i class="fa fa-heart mt-3 liked"></i></a>-->
 
@@ -66,7 +66,7 @@
                                   th:datetime="${#temporals.format(comment.getAddedOn(), 'yyyy-MM-dd HH:mm:ss')}"
                                   th:text="${#temporals.format(comment.getAddedOn(), 'yyyy-MM-dd HH:mm:ss')}"></span>
                             <a th:id="|comment-delete-${comment.id}|" class="btn btn-danger"
-                               th:if="${user.isAuthorOfComment(comment) || user.isPublisher(video)}"
+                               th:if="${currentUser.isAuthorOfComment(comment) || currentUser.isPublisher(video)}"
                                th:href="@{/videos/comments/delete/{commentId}/{videoId}/{categoryId}(commentId=${comment.id},videoId=${video.id},categoryId=${video.getCategory().getId()})}"><i
                                     class="fa fa-trash"></i></a>
                         </div>

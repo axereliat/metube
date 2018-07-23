@@ -3,6 +3,7 @@ package org.metube.controller;
 import org.metube.bindingModel.UserEditBindingModel;
 import org.metube.entity.Role;
 import org.metube.entity.User;
+import org.metube.exception.ResourceNotFoundException;
 import org.metube.service.RoleService;
 import org.metube.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,11 +43,7 @@ public class AdminUserController {
     public String delete(@PathVariable Integer id, Model model) {
         User user = this.userService.findById(id);
 
-        if (user == null) {
-            return "redirect:/admin/users";
-        }
-
-        model.addAttribute("user", user);
+        model.addAttribute("currentUserToDelete", user);
         model.addAttribute("view", "/admin/user/delete");
 
         return "base-layout";
@@ -55,10 +52,6 @@ public class AdminUserController {
     @PostMapping("/delete/{id}")
     public String deleteProcess(@PathVariable Integer id) {
         User user = this.userService.findById(id);
-
-        if (user == null) {
-            return "redirect:/admin/users/";
-        }
 
         this.userService.deleteUserById(user.getId());
 
@@ -69,33 +62,15 @@ public class AdminUserController {
     public String edit(@PathVariable Integer id, Model model) {
         User user = this.userService.findById(id);
 
-        if (user == null) {
-            return "redirect:/admin/users";
-        }
-
-        model.addAttribute("user", user);
+        model.addAttribute("currentUser", user);
         model.addAttribute("roles", this.roleService.findAll());
-        model.addAttribute("view", "/admin/user/edit");
+        model.addAttribute("view", "admin/user/edit");
 
         return "base-layout";
     }
 
     @PostMapping("/edit/{id}")
     public String editProcess(UserEditBindingModel userEditBindingModel, @PathVariable Integer id) {
-        User user = this.userService.findById(id);
-
-        if (user == null) {
-            return "redirect:/admin/users/";
-        }
-        Set<Role> roles = new HashSet<>();
-        for (Integer roleId : userEditBindingModel.getRoles()) {
-            roles.add(this.roleService.findById(roleId));
-        }
-        user.setRoles(roles);
-        user.setUsername(userEditBindingModel.getUsername());
-        this.userService.registerUser(user);
-
-        return "redirect:/admin/users/";
+        return this.userService.adminEditUser(userEditBindingModel, id);
     }
-
 }

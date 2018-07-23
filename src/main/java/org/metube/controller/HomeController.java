@@ -48,7 +48,9 @@ public class HomeController {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String notFound(Model model) {
-        return "error/404";
+        model.addAttribute("view", "error/404");
+
+        return "base-layout";
     }
 
     @GetMapping("/error/403")

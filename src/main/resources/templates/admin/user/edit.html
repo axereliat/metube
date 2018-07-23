@@ -1,9 +1,9 @@
 <div class="jumbotron">
-    <form method="post" th:action="@{/admin/users/edit/{id}(id=${user.id})}">
-        <h1>Delete User</h1>
+    <form method="post" th:action="@{/admin/users/edit/{id}(id=${currentUser.id})}">
+        <h1>Edit User</h1>
         <div class="form-group">
             <label for="username">Username: </label>
-            <input type="text" name="username" id="username" th:value="${user.username}"/> <br/>
+            <input type="text" name="username" id="username" th:value="${currentUser.username}"/> <br/>
         </div>
         <div class="form-group"><label class="col-sm-4 control-label" for="roles">Roles</label>
             <div class="col-sm-6">
@@ -11,7 +11,7 @@
                     <input id="roles" type="checkbox" name="roles"
                            th:value="${role.id}"
                            th:text="${role.getName()}"
-                           th:checked="${user.roles.contains(role)}"/> <br/>
+                           th:checked="${currentUser.roles.contains(role)}"/> <br/>
                 </th:block>
             </div>
         </div>

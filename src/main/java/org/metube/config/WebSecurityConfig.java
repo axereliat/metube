@@ -42,7 +42,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .rememberMe()
                 .rememberMeParameter("remember")
-                .key("remember Me Encryption Key")
+                .key("rememberKey")
                 .rememberMeCookieName("rememberMe")
                 .tokenValiditySeconds(604800) // one week
                 .and()
