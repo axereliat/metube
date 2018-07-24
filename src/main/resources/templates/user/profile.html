@@ -1,6 +1,30 @@
 <div class="jumbotron">
-    <h1 th:text="${user.username}"></h1>
-    <img th:src="@{/avatars/{avatar}(avatar=${user.avatar})}" width="20%" height="20%" alt="avatar" />
+    <h1 th:text="${currentUser.username}"></h1>
+    <img th:src="@{/avatars/{avatar}(avatar=${currentUser.avatar})}" width="20%" height="20%" alt="avatar" />
     <br/>
-    Birthdate: <p th:text="${#temporals.format(user.birthdate, 'dd/MMM/yyyy')}"></p>
+    <h4>Birthdate: <span th:text="${#temporals.format(currentUser.birthdate, 'dd/MM/yyyy')}"></span></h4>
+    <h4>Gender: <span th:text="${currentUser.gender}"></span></h4>
+
+
+    <h1 class="text-center mb-3">Videos</h1>
+    <div class="row">
+        <th:block th:each="video : ${videos}" th:if="${videos.size() > 0}">
+            <div class="col-md-4">
+                <a th:href="@{/videos/details/{id}?category={categoryId}(id=${video.id},categoryId=${video.getCategory().getId()})}"><h4 th:text="${video.title}"></h4></a>
+                <img width="200" height="200" th:src="@{${'http://img.youtube.com/vi/' + video.youtubeId +'/0.jpg'}}" />
+            </div>
+        </th:block>
+        <p th:text="${page}"></p>
+
+        <h2 th:if="${currentUser.videos.size() == 0}">No videos...</h2>
+    </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination mt-4">
+            <li class="page-item"><a class="page-link" th:href="@{/profile/{id}?page={page}(id=${currentUser.id},page=${currentPage - 1})}" th:if="${currentPage > 1}">Previous</a></li>
+            <th:block th:each="page : ${#numbers.sequence(1, pages + 1)}" th:if="${pages > 0}">
+                <li class="page-item"><a class="page-link" th:href="@{/profile/{id}?page={page}(id=${currentUser.id},page=${page})}" th:text="${page}"></a></li>
+            </th:block>
+            <li class="page-item"><a class="page-link" th:href="@{/profile/{id}?page={page}(id=${currentUser.id},page=${currentPage + 1})}" th:if="${currentPage <= pages}">Next</a></li>
+        </ul>
+    </nav>
 </div>

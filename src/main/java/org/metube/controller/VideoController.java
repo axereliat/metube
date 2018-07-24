@@ -95,6 +95,7 @@ public class VideoController {
         int pages = allVideosByCategory.size() / VIDEOS_PER_PAGE;
 
         model.addAttribute("title", "List videos");
+        model.addAttribute("currentPage", page);
         model.addAttribute("search", search);
         model.addAttribute("categoryId", id);
         model.addAttribute("videos", videos);
@@ -167,6 +168,7 @@ public class VideoController {
         map.put("videoId", id.toString());
         map.put("categoryId", category.toString());
         map.put("username", commentEntity.getAuthor().getUsername());
+        map.put("userid", String.valueOf(commentEntity.getAuthor().getId()));
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");;
         map.put("addedOn", commentEntity.getAddedOn().format(formatter));
         map.put("comment", commentEntity.getContent());

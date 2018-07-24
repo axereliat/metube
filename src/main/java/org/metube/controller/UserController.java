@@ -4,6 +4,7 @@ import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.metube.bindingModel.UserProfileEditBindingModel;
 import org.metube.bindingModel.UserRegisterBindingModel;
 import org.metube.entity.User;
+import org.metube.entity.Video;
 import org.metube.service.RoleService;
 import org.metube.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +22,13 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 public class UserController {
+
+    private static final int VIDEOS_PER_PAGE = 6;
 
     private final UserService userService;
 
@@ -36,11 +41,23 @@ public class UserController {
     }
 
     @GetMapping("/profile/{id}")
-    public String profile(Model model, @PathVariable Integer id) {
+    public String profile(Model model, @PathVariable Integer id, Integer page) {
+        if (page == null) page = 1;
+
         User user = this.userService.findById(id);
 
+        List<Video> videos = user.getVideos().stream()
+                .skip(VIDEOS_PER_PAGE * (page - 1))
+                .limit(VIDEOS_PER_PAGE)
+                .collect(Collectors.toList());
+
+        int pages = user.getVideos().size() / VIDEOS_PER_PAGE;
+
         model.addAttribute("title", "Profile of " + user.getUsername());
-        model.addAttribute("user", user);
+        model.addAttribute("currentUser", user);
+        model.addAttribute("videos", videos);
+        model.addAttribute("pages", pages);
+        model.addAttribute("currentPage", page);
         model.addAttribute("view", "user/profile");
 
         return "base-layout";

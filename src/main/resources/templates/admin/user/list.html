@@ -16,7 +16,7 @@
                             <td th:text="${user.id}"></td>
                             <td th:text="${user.username}"></td>
                             <td> 
-                                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}">Edit</a> 
+                                <a th:href="@{/admin/users/edit/{id}(id=${user.id})}" th:if="${!user.isAdmin()}">Edit</a> 
                                 <a th:href="@{/admin/users/delete/{id}(id=${user.id})}" th:if="${!user.isAdmin()}">Delete</a>
                             </td>
                         </tr>

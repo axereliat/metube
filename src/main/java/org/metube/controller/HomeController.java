@@ -26,7 +26,7 @@ public class HomeController {
         this.userService = userServicey;
     }
 
-    //@ModelAttribute
+    /*//@ModelAttribute
     public void populateModel(Model model) {
         final Object principal = SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -37,10 +37,10 @@ public class HomeController {
             model.addAttribute("user", userEntity);
         }
     }
-
+*/
     @GetMapping("/")
     public String index(Model model) {
-        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute("categories", this.categoryService.findAll());
         model.addAttribute("view", "home/index");
         return "base-layout";
     }

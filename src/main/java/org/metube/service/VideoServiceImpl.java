@@ -174,7 +174,9 @@ public class VideoServiceImpl implements VideoService {
     @Override
     public Video findVideoById(Integer id) {
         Optional<Video> videoOptional = this.videoRepository.findById(id);
-        if (!videoOptional.isPresent()) throw new ResourceNotFoundException();
+        if (!videoOptional.isPresent()) {
+            throw new ResourceNotFoundException();
+        }
 
         return videoOptional.get();
     }

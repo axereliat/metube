@@ -1,7 +1,10 @@
 package org.metube.service;
 
+import org.metube.bindingModel.CategoryCreateBindingModel;
 import org.metube.entity.Category;
+import org.metube.exception.ResourceNotFoundException;
 import org.metube.repository.CategoryRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,8 +23,19 @@ public class CategoryServiceImpl implements CategoryService {
     }
 
     @Override
-    public void createCategory(Category category) {
+    public void createCategory(CategoryCreateBindingModel categoryCreateBindingModel) {
+        ModelMapper modelMapper = new ModelMapper();
+        Category category = modelMapper.map(categoryCreateBindingModel, Category.class);
+
         this.categoryRepository.saveAndFlush(category);
+    }
+
+    @Override
+    public void editCategory(CategoryCreateBindingModel categoryCreateBindingModel, Integer id) {
+        Category category = this.findById(id);
+        category.setName(categoryCreateBindingModel.getName());
+
+        this.categoryRepository.save(category);
     }
 
     @Override
@@ -31,7 +45,10 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Category findById(Integer id) {
-        return this.categoryRepository.findById(id).orElse(null);
+        Category category = this.categoryRepository.findById(id).orElse(null);
+        if (category == null) throw new ResourceNotFoundException();
+
+        return category;
     }
 
     @Override

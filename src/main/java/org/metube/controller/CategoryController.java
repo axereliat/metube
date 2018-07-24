@@ -41,9 +41,7 @@ public class CategoryController {
 
     @PostMapping("/create")
     public String createProcess(CategoryCreateBindingModel categoryCreateBindingModel) {
-        ModelMapper modelMapper = new ModelMapper();
-        Category category = modelMapper.map(categoryCreateBindingModel, Category.class);
-        this.categoryService.createCategory(category);
+        this.categoryService.createCategory(categoryCreateBindingModel);
 
         return "redirect:/admin/categories/";
     }
@@ -51,10 +49,6 @@ public class CategoryController {
     @GetMapping("/delete/{id}")
     public String delete(Model model, @PathVariable Integer id) {
         Category category = this.categoryService.findById(id);
-
-        if (category == null) {
-            return "redirect:/admin/categories/";
-        }
 
         model.addAttribute("title", "Delete category");
         model.addAttribute("category", category);
@@ -67,10 +61,6 @@ public class CategoryController {
     public String deleteProcess(@PathVariable Integer id) {
         Category category = this.categoryService.findById(id);
 
-        if (category == null) {
-            return "redirect:/admin/categories/";
-        }
-
         this.categoryService.removeCategoryById(category.getId());
 
         return "redirect:/admin/categories/";
@@ -79,10 +69,6 @@ public class CategoryController {
     @GetMapping("/edit/{id}")
     public String edit(Model model, @PathVariable Integer id) {
         Category category = this.categoryService.findById(id);
-
-        if (category == null) {
-            return "redirect:/admin/categories/";
-        }
 
         model.addAttribute("title", "Edit category");
         model.addAttribute("category", category);
@@ -93,14 +79,7 @@ public class CategoryController {
 
     @PostMapping("/edit/{id}")
     public String editProcess(CategoryCreateBindingModel categoryCreateBindingModel, @PathVariable Integer id) {
-        Category category = this.categoryService.findById(id);
-
-        if (category == null) {
-            return "redirect:/admin/categories/";
-        }
-
-        category.setName(categoryCreateBindingModel.getName());
-        this.categoryService.createCategory(category);
+        this.categoryService.editCategory(categoryCreateBindingModel, id);
 
         return "redirect:/admin/categories/";
     }

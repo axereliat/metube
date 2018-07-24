@@ -61,7 +61,7 @@
                     <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
                         <div class="d-flex justify-content-between align-items-center w-100">
                             <img th:src="@{/avatars/{avatar}(avatar=${comment.author.avatar})}" width="5%" height="5%" alt="avatar" />
-                            <strong th:text="${comment.getAuthor().getUsername()}"></strong>
+                            <a th:href="@{/profile/{id}(id=${comment.getAuthor().getId()})}"><strong th:text="${comment.getAuthor().getUsername()}"></strong></a>
                             <span class="text-gray-dark timeago"
                                   th:datetime="${#temporals.format(comment.getAddedOn(), 'yyyy-MM-dd HH:mm:ss')}"
                                   th:text="${#temporals.format(comment.getAddedOn(), 'yyyy-MM-dd HH:mm:ss')}"></span>
@@ -156,7 +156,7 @@
                                 .append($('<div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">')
                                     .append($('<div class="d-flex justify-content-between align-items-center w-100">')
                                         .append($('<img src="/avatars/' + avatar + '" width="5%" height="5%" alt="avatar" />'))
-                                        .append($('<strong>' + username + '</strong>'))
+                                        .append($('<a href="/profile/' + res.userid + '"><strong>' + username + '</strong></a>'))
                                         .append($('<span class="text-gray-dark timeago" datetime="' + addedOn + '">' + addedOn + '</span>' + deleteBtn))
                                     )
                                     .append($('<span class="d-block">' + comment + '</span>'))
