@@ -24,6 +24,8 @@
 
             <h3>Published by:</h3>
             <a th:text="${video.publisher.username}" th:href="@{/profile/{id}(id=${video.publisher.id})}"></a>
+
+            <h3 class="mt-3" th:text="|Views: ${video.views}|"></h3>
         </div>
         <a name="heart"
            th:href="@{/videos/likes/{videoId}/{categoryId}(videoId=${video.id},categoryId=${video.getCategory().getId()})}"

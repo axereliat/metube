@@ -3,7 +3,7 @@
     <img th:src="@{/avatars/{avatar}(avatar=${currentUser.avatar})}" width="20%" height="20%" alt="avatar" />
     <br/>
     <h4>Birthdate: <span th:text="${#temporals.format(currentUser.birthdate, 'dd/MM/yyyy')}"></span></h4>
-    <h4>Gender: <span th:text="${currentUser.gender}"></span></h4>
+    <h4>Gender: <span th:text="${currentUser.gender.toString()}"></span></h4>
 
 
     <h1 class="text-center mb-3">Videos</h1>

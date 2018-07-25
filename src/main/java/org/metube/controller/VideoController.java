@@ -77,14 +77,38 @@ public class VideoController {
         return tokens[1];
     }
 
+    private Comparator<Video> defineComparator(String sort) {
+        Comparator<Video> comparator = (x1, x2) -> Integer.compare(x2.getViews(), x1.getViews());
+        switch (sort) {
+            case "views":
+                comparator = (x1, x2) -> Integer.compare(x2.getViews(), x1.getViews());
+                break;
+            case "title":
+                comparator = (x1, x2) -> x1.getTitle().compareTo(x2.getTitle());
+                break;
+            case "likes":
+                comparator = (x1, x2) -> Integer.compare(x2.getUsersLiked().size(), x1.getUsersLiked().size());
+                break;
+            case "date":
+                comparator = (x1, x2) -> x2.getAddedOn().compareTo(x1.getAddedOn());
+                break;
+        }
+
+        return comparator;
+    }
+
     @GetMapping("/{id}")
-    public String list(Model model, @PathVariable Integer id, Integer page, String search) {
+    public String list(Model model, @PathVariable Integer id, Integer page, String search, String sort) {
+        if (sort == null) sort = "views";
         if (page == null) page = 1;
         if (search == null) search = "";
+
+        Comparator<Video> comparator = this.defineComparator(sort);
 
         final String srch = search.toLowerCase();
         List<Video> allVideosByCategory = this.videoService.findAllVideos().stream()
                 .filter(x -> x.getCategory().getId().equals(id) && (x.getTags().stream().filter(y -> y.getName().toLowerCase().contains(srch)).count() > 0 || x.getTitle().toLowerCase().contains(srch)))
+                .sorted(comparator)
                 .collect(Collectors.toList());;
 
         List<Video> videos = allVideosByCategory.stream()
@@ -96,6 +120,7 @@ public class VideoController {
 
         model.addAttribute("title", "List videos");
         model.addAttribute("currentPage", page);
+        model.addAttribute("sort", sort);
         model.addAttribute("search", search);
         model.addAttribute("categoryId", id);
         model.addAttribute("videos", videos);
@@ -126,6 +151,8 @@ public class VideoController {
     @GetMapping("/details/{id}")
     public String details(Model model, @PathVariable Integer id, Integer category, Principal principal) {
         Video video = this.videoService.findVideoById(id);
+
+        video.incrementViews();
 
         List<Comment> comments = video.getComments().stream().sorted((x1, x2) -> x2.getAddedOn().compareTo(x1.getAddedOn())).collect(Collectors.toList());
 

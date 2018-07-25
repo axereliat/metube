@@ -30,6 +30,8 @@ public class Video {
 
     private Set<Tag> tags;
 
+    private int views;
+
     public Video() {
         this.comments = new HashSet<>();
         this.usersLiked = new HashSet<>();
@@ -130,6 +132,19 @@ public class Video {
 
     public void setTags(Set<Tag> tags) {
         this.tags = tags;
+    }
+
+    public int getViews() {
+        return views;
+    }
+
+    public void setViews(int views) {
+        this.views = views;
+    }
+
+    @Transient
+    public void incrementViews() {
+        this.views++;
     }
 
     @Transient
