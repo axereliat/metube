@@ -1,40 +1,106 @@
 <div class="jumbotron">
     <a th:href="@{/videos/{id}(id=${categoryId})}" class="btn btn-block btn-outline-primary mb-3">All Videos</a>
     <form class="form-inline mb-3" th:action="@{/videos/{id}(id=${categoryId})}">
-        <input name="search" class="form-control mr-sm-2" type="search" placeholder="Search..." aria-label="Search" th:value="${search}">
+        <input name="search" class="form-control mr-sm-2" id="search" type="search" placeholder="Search..." aria-label="Search"
+               th:value="${search}">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
     </form>
     <div class="dropdown">
-        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
             Sort by
         </button>
         <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-            <a class="dropdown-item" th:href="@{/videos/{id}?search={search}&page={page}&sort=views(id=${categoryId},search=${search},page=${currentPage})}">Views</a>
-            <a class="dropdown-item" th:href="@{/videos/{id}?search={search}&page={page}&sort=title(id=${categoryId},search=${search},page=${currentPage})}">Title</a>
-            <a class="dropdown-item" th:href="@{/videos/{id}?search={search}&page={page}&sort=likes(id=${categoryId},search=${search},page=${currentPage})}">Likes</a>
-            <a class="dropdown-item" th:href="@{/videos/{id}?search={search}&page={page}&sort=date(id=${categoryId},search=${search},page=${currentPage})}">Date (newest first)</a>
+            <a class="dropdown-item"
+               th:href="@{/videos/{id}?search={search}&page={page}&sort=views(id=${categoryId},search=${search},page=${currentPage})}">Views</a>
+            <a class="dropdown-item"
+               th:href="@{/videos/{id}?search={search}&page={page}&sort=title(id=${categoryId},search=${search},page=${currentPage})}">Title</a>
+            <a class="dropdown-item"
+               th:href="@{/videos/{id}?search={search}&page={page}&sort=likes(id=${categoryId},search=${search},page=${currentPage})}">Likes</a>
+            <a class="dropdown-item"
+               th:href="@{/videos/{id}?search={search}&page={page}&sort=date(id=${categoryId},search=${search},page=${currentPage})}">Date
+                (newest first)</a>
         </div>
     </div>
-    <div class="row">
+    <div id="videos" class="row">
         <th:block th:each="video : ${videos}" th:if="${videos.size() > 0}">
             <div class="col-md-4">
-                <a th:href="@{/videos/details/{id}?category={categoryId}(id=${video.id},categoryId=${video.getCategory().getId()})}"><h4 th:text="${video.title}"></h4></a>
-                <img width="200" height="200" th:src="@{${'http://img.youtube.com/vi/' + video.youtubeId +'/0.jpg'}}" />
+                <a th:href="@{/videos/details/{id}?category={categoryId}(id=${video.id},categoryId=${video.getCategory().getId()})}">
+                    <h4 th:text="${video.title}"></h4></a>
+                <img width="200" height="200" th:src="@{${'http://img.youtube.com/vi/' + video.youtubeId +'/0.jpg'}}"/>
             </div>
         </th:block>
-            <p th:text="${page}"></p>
+        <p th:text="${page}"></p>
 
         <h2 th:if="${videos.size() == 0}">No results...</h2>
     </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination mt-4">
-            <li class="page-item"><a class="page-link" th:href="@{/videos/{id}?page={page}&search={search}&sort={sort}(id=${categoryId},page=${currentPage - 1},sort=${sort},search=${search})}" th:if="${currentPage > 1}">Previous</a></li>
             <th:block th:each="page : ${#numbers.sequence(1, pages + 1)}" th:if="${pages > 0}">
-                <li class="page-item"><a class="page-link" th:href="@{/videos/{id}?page={page}&search={search}&sort={sort}(id=${categoryId},sort=${sort},page=${page},search=${search})}" th:text="${page}"></a></li>
+                <li class="page-item"><a th:id="|page-${page}|" class="page-link"
+                                         th:href="@{/videos/{id}?page={page}&search={search}&sort={sort}(id=${categoryId},sort=${sort},page=${page},search=${search})}"
+                                         th:text="${page}"></a></li>
             </th:block>
-            <li class="page-item"><a class="page-link" th:href="@{/videos/{id}?page={page}&search={search}&sort={sort}(id=${categoryId},page=${currentPage + 1},sort=${sort},search=${search})}" th:if="${currentPage <= pages}">Next</a></li>
         </ul>
     </nav>
     <br/>
     <a href="/" class="btn btn-secondary mt-3"><i class="fa fa-undo"></i> Back</a>
 </div>
+
+<script th:inline="javascript">
+    // document ready function
+    (function ($) {
+        $(function () {
+            $("a[id^=page]").on('click', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    method: 'get',
+                    url: "/api" + $(this).attr('href'),
+                    dataType: 'json',
+                    success: function (res) {
+                        $('#videos').empty();
+                        for (var i = 0; i < res.length; i++) {
+                            var video = res[i];
+                            $('#videos').append(
+                                $('<div class="col-md-4">').append(
+                                    $('<a href="/videos/details/' + video.id + '?category=' + video.categoryId + '"><h4>' + video.title + "</h4></a>").append(
+                                        $('<img width="200" height="200" src="' + video.videoUrl + '"/>')
+                                    )
+                                )
+                            );
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+
+            var categoryId = /*[[${categoryId}]]*/ 'default'
+            $("#search").on('input', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    method: 'get',
+                    url: '/api/videos/' + categoryId + '?search=' + $(this).val(),
+                    dataType: 'json',
+                    success: function (res) {
+                        $('#videos').empty();
+                        for (var i = 0; i < res.length; i++) {
+                            var video = res[i];
+                            $('#videos').append(
+                                $('<div class="col-md-4">').append(
+                                    $('<a href="/videos/details/' + video.id + '?category=' + video.categoryId + '"><h4>' + video.title + "</h4></a>").append(
+                                        $('<img width="200" height="200" src="' + video.videoUrl + '"/>')
+                                    )
+                                )
+                            );
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+        })
+    })(jQuery)
+</script>

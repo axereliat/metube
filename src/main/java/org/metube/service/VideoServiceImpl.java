@@ -1,12 +1,11 @@
 package org.metube.service;
 
-import org.metube.bindingModel.VideoUploadBindingModel;
-import org.metube.entity.*;
+import org.metube.domain.model.bindingModel.VideoUploadBindingModel;
 import org.metube.exception.ResourceNotFoundException;
 import org.metube.repository.CategoryRepository;
 import org.metube.repository.TagRepository;
 import org.metube.repository.VideoRepository;
-import org.metube.viewModel.VideoEditViewModel;
+import org.metube.domain.model.viewModel.VideoEditViewModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

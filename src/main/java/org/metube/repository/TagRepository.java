@@ -1,6 +1,6 @@
 package org.metube.repository;
 
-import org.metube.entity.Tag;
+import org.metube.domain.entity.Tag;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

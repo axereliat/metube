@@ -1,6 +1,6 @@
 package org.metube.config;
 
-import org.metube.entity.User;
+import org.metube.domain.entity.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.UserDetails;
