@@ -1,6 +1,6 @@
 package org.metube.repository;
 
-import org.metube.domain.entity.Comment;
+import org.metube.entity.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

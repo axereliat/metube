@@ -1,6 +1,6 @@
 package org.metube.repository;
 
-import org.metube.domain.entity.Role;
+import org.metube.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

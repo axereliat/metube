@@ -1,9 +1,10 @@
 package org.metube.service;
 
-import org.metube.domain.model.bindingModel.UserEditBindingModel;
-import org.metube.domain.model.bindingModel.UserProfileEditBindingModel;
-import org.metube.domain.model.bindingModel.UserRegisterBindingModel;
-import org.metube.domain.entity.User;
+import org.metube.bindingModel.UserEditBindingModel;
+import org.metube.bindingModel.UserProfileEditBindingModel;
+import org.metube.bindingModel.UserRegisterBindingModel;
+import org.metube.entity.User;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 

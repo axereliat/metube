@@ -1,4 +1,6 @@
 <div class="jumbotron">
+    <a href="/edit" class="btn btn-primary mb-3" th:if="${currentUser.username.equals(#authentication.name)}">Edit Profile</a>
+
     <h1 th:text="${currentUser.username}"></h1>
     <img th:src="@{/avatars/{avatar}(avatar=${currentUser.avatar})}" width="20%" height="20%" alt="avatar" />
     <br/>
@@ -7,7 +9,7 @@
 
 
     <h1 class="text-center mb-3">Videos</h1>
-    <div class="row">
+    <div class="row" id="videos">
         <th:block th:each="video : ${videos}" th:if="${videos.size() > 0}">
             <div class="col-md-4">
                 <a th:href="@{/videos/details/{id}?category={categoryId}(id=${video.id},categoryId=${video.getCategory().getId()})}"><h4 th:text="${video.title}"></h4></a>
@@ -20,11 +22,41 @@
     </div>
     <nav aria-label="Page navigation example">
         <ul class="pagination mt-4">
-            <li class="page-item"><a class="page-link" th:href="@{/profile/{id}?page={page}(id=${currentUser.id},page=${currentPage - 1})}" th:if="${currentPage > 1}">Previous</a></li>
             <th:block th:each="page : ${#numbers.sequence(1, pages + 1)}" th:if="${pages > 0}">
-                <li class="page-item"><a class="page-link" th:href="@{/profile/{id}?page={page}(id=${currentUser.id},page=${page})}" th:text="${page}"></a></li>
+                <li class="page-item"><a class="page-link" th:id="|page-${page}|" th:href="@{/profile/{id}?page={page}(id=${currentUser.id},page=${page})}" th:text="${page}"></a></li>
             </th:block>
-            <li class="page-item"><a class="page-link" th:href="@{/profile/{id}?page={page}(id=${currentUser.id},page=${currentPage + 1})}" th:if="${currentPage <= pages}">Next</a></li>
         </ul>
     </nav>
 </div>
+
+<script th:inline="javascript">
+    // document ready function
+    (function ($) {
+        $(function () {
+            $("a[id^=page]").on('click', function (e) {
+                e.preventDefault();
+                $.ajax({
+                    method: 'get',
+                    url: "/api" + $(this).attr('href'),
+                    dataType: 'json',
+                    success: function (res) {
+                        $('#videos').empty();
+                        for (var i = 0; i < res.length; i++) {
+                            var video = res[i];
+                            $('#videos').append(
+                                $('<div class="col-md-4">').append(
+                                    $('<a href="/videos/details/' + video.id + '?category=' + video.categoryId + '"><h4>' + video.title + "</h4></a>").append(
+                                        $('<img width="200" height="200" src="' + video.videoUrl + '"/>')
+                                    )
+                                )
+                            );
+                        }
+                    },
+                    error: function (err) {
+                        console.log(err);
+                    }
+                });
+            });
+        })
+    })(jQuery)
+</script>

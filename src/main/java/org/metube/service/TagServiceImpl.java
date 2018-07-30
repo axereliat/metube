@@ -1,6 +1,6 @@
 package org.metube.service;
 
-import org.metube.domain.entity.Tag;
+import org.metube.entity.Tag;
 import org.metube.repository.TagRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

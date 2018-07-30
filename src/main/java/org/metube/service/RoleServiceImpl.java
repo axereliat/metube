@@ -1,7 +1,7 @@
 package org.metube.service;
 
-import org.metube.domain.entity.Role;
-import org.metube.domain.entity.User;
+import org.metube.entity.Role;
+import org.metube.entity.User;
 import org.metube.repository.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
