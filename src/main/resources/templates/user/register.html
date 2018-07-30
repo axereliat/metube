@@ -19,6 +19,7 @@
                     <label class="custom-control-label" for="password">Password: </label>
                     <input type="password" class="form-control" name="password" id="password"
                            placeholder="Password..."/>
+                    Show password <input type="checkbox" onclick="togglePassword()" /> <br/>
                     <span id="result" class="short"></span>
                 </div>
 
@@ -27,6 +28,7 @@
                     <input type="password" class="form-control" name="confirmPassword" id="confirmPassword"
                            placeholder="Confirm password..."/>
                 </div>
+                <span id="matchResult"></span>
 
                 <div class="form-group">
                     <label for="datepicker" class="form-control-label">Birthdate:</label>
@@ -59,6 +61,32 @@
 </script>
 
 <script>
+    $(document).ready(function () {
+        $('#confirmPassword, #password').keyup(function () {
+            var res = $('#matchResult');
+            if ($('#confirmPassword').val() === $('#password').val()) {
+                res.html('Passwords match!')
+                    .removeClass()
+                    .addClass('strong');
+            } else {
+                res.html('Passwords don\'t match!')
+                    .removeClass()
+                    .addClass('short');
+            }
+        });
+    })
+</script>
+
+<script>
+    function togglePassword() {
+        var pass = $('#password');
+        if (pass.prop('type') === 'password') {
+            pass.prop('type', 'text')
+        } else {
+            pass.prop('type', 'password')
+        }
+    }
+
     $(document).ready(function() {
         $('#password').keyup(function() {
             $('#result').html(checkStrength($('#password').val()))
