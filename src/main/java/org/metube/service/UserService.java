@@ -27,4 +27,6 @@ public interface UserService {
     String editUser(UserProfileEditBindingModel userProfileEditBindingModel, RedirectAttributes redirectAttributes, MultipartFile avatar);
 
     String adminEditUser(UserEditBindingModel userEditBindingModel, Integer id);
+
+    void save(User user);
 }

@@ -17,12 +17,17 @@
 
                 <div class="form-group">
                     <label class="custom-control-label" for="password">Password: </label>
-                    <input type="password" class="form-control" name="password" id="password"
-                           placeholder="Password..."/>
-                    Show password <input type="checkbox" onclick="togglePassword()" /> <br/>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" name="password" id="password"
+                               placeholder="Password..."/>
+                        <div class="input-group-append">
+                            <span class="input-group-text" id="basic-addon2">
+                                <a id="eye" href="#" style="color: black"><i class="fa fa-eye"></i></a>
+                            </span>
+                        </div>
+                    </div>
                     <span id="result" class="short"></span>
                 </div>
-
                 <div class="form-group">
                     <label class="custom-control-label" for="confirmPassword">Confirm password: </label>
                     <input type="password" class="form-control" name="confirmPassword" id="confirmPassword"
@@ -78,19 +83,25 @@
 </script>
 
 <script>
-    function togglePassword() {
-        var pass = $('#password');
-        if (pass.prop('type') === 'password') {
-            pass.prop('type', 'text')
-        } else {
-            pass.prop('type', 'password')
-        }
-    }
-
     $(document).ready(function() {
+        $('#eye').on('click', function (e) {
+            e.preventDefault();
+
+            var pass = $('#password');
+            if (pass.prop('type') === 'password') {
+                pass.prop('type', 'text');
+                $('#eye').find('i').removeClass();
+                $('#eye').find('i').addClass('fa fa-eye-slash');
+            } else {
+                pass.prop('type', 'password');
+                $('#eye').find('i').removeClass();
+                $('#eye').find('i').addClass('fa fa-eye');
+            }
+        });
+
         $('#password').keyup(function() {
             $('#result').html(checkStrength($('#password').val()))
-        })
+        });
         function checkStrength(password) {
             var strength = 0
             if (password.length < 6) {

@@ -137,11 +137,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }
         }
 
-        if (!avatar.getOriginalFilename().endsWith(".jpeg") && !avatar.getOriginalFilename().endsWith(".jpg") && !avatar.getOriginalFilename().endsWith(".png")) {
-            redirectAttributes.addFlashAttribute("error", "Only the following formats are allowed: jpeg, jpg, png");
-            return "redirect:/edit";
-        }
         if (!avatar.getOriginalFilename().equals("")) {
+            if (!avatar.getOriginalFilename().endsWith(".jpeg") && !avatar.getOriginalFilename().endsWith(".jpg") && !avatar.getOriginalFilename().endsWith(".png")) {
+                redirectAttributes.addFlashAttribute("error", "Only the following formats are allowed: jpeg, jpg, png");
+                return "redirect:/edit";
+            }
             try {
                 // Get the file and save it somewhere
                 byte[] bytes = avatar.getBytes();
@@ -216,6 +216,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User findByUsername(String username) {
         return this.userRepository.findByUsername(username);
+    }
+
+    @Override
+    public void save(User user) {
+        this.userRepository.saveAndFlush(user);
     }
 
     @Override
