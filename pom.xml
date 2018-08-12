@@ -86,6 +86,13 @@
             <artifactId>spring-boot-starter-mail</artifactId>
             <version>2.0.1.RELEASE</version>
         </dependency>
+
+
+        <dependency>
+            <groupId>com.cloudinary</groupId>
+            <artifactId>cloudinary</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
     <build>

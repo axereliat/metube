@@ -9,7 +9,10 @@ import org.metube.repository.VideoRepository;
 import org.metube.viewModel.VideoEditViewModel;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -182,7 +185,14 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
+    @Cacheable("all_videos")
     public List<Video> findAllVideos() {
         return this.videoRepository.findAll();
+    }
+
+    @CacheEvict(cacheNames = {"all_videos"}, allEntries = true)
+    @Scheduled(fixedRate = 50000)
+    public void deleteCaches() {
+        //System.out.println("deleted cache");
     }
 }

@@ -2,7 +2,7 @@
     <a href="/edit" class="btn btn-primary mb-3" th:if="${currentUser.username.equals(#authentication.name)}">Edit Profile</a>
 
     <h1 th:text="${currentUser.username}"></h1>
-    <img th:src="@{/avatars/{avatar}(avatar=${currentUser.avatar})}" width="20%" height="20%" alt="avatar" />
+    <img th:src="${currentUser.avatar}" width="20%" height="20%" alt="avatar" />
     <br/>
     <h4>Birthdate: <span th:text="${#temporals.format(currentUser.birthdate, 'dd/MM/yyyy')}"></span></h4>
     <h4>Gender: <span th:text="${currentUser.gender.toString()}"></span></h4>

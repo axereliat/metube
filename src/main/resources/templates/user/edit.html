@@ -20,7 +20,7 @@
                 </div>
 
                 <div class="form-group">
-                    <img th:src="@{/avatars/{id}(id=${user.avatar})}" width="30%" height="30%" alt="Old avatar">
+                    <img th:src="${user.avatar}" width="30%" height="30%" alt="Old avatar">
                     <input type="file" class="form-control-file" name="avatar" id="avatar" />
                 </div>
 

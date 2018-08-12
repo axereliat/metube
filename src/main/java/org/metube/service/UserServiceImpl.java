@@ -39,12 +39,15 @@ import java.util.stream.Collectors;
 @Transactional
 public class UserServiceImpl implements UserService, UserDetailsService {
 
+    private final CloudService cloudService;
+
     private final UserRepository userRepository;
 
     private final RoleRepository roleRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(CloudService cloudService, UserRepository userRepository, RoleRepository roleRepository) {
+        this.cloudService = cloudService;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
     }
@@ -83,6 +86,12 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return "redirect:/register";
         }
 
+        if (!avatar.getOriginalFilename().equals("")) {
+            if (!avatar.getOriginalFilename().endsWith(".jpeg") && !avatar.getOriginalFilename().endsWith(".jpg") && !avatar.getOriginalFilename().endsWith(".png")) {
+                redirAttrs.addFlashAttribute("error", "Only the following formats are allowed: jpeg, jpg, png");
+                return "redirect:/edit";
+            }
+        }
 
         ModelMapper modelMapper = new ModelMapper();
         User user = modelMapper.map(userRegisterBindingModel, User.class);
@@ -100,20 +109,17 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         user.setGender(Gender.valueOf(userRegisterBindingModel.getGender().toUpperCase()));
 
-        this.userRepository.saveAndFlush(user);
         try {
-            // Get the file and save it somewhere
-            byte[] bytes = avatar.getBytes();
-            String property = System.getProperty("user.dir");
-            String fileName = "avatar_" + user.getId() + this.getFileExtension(avatar.getOriginalFilename());
-            Path path = Paths.get(property + "/src/main/resources/static/avatars/" + fileName);
-            Files.write(path, bytes);
-            user.setAvatar(fileName);
-
-            this.userRepository.saveAndFlush(user);
+            if (avatar.getOriginalFilename().equals("")) {
+                user.setAvatar("http://res.cloudinary.com/dr8ovbzd2/image/upload/v1534048322/no-user.png");
+            } else {
+                user.setAvatar(this.cloudService.upload(avatar));
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        this.userRepository.saveAndFlush(user);
 
         redirAttrs.addFlashAttribute("success", "You have successfully registered");
 
@@ -142,17 +148,6 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                 redirectAttributes.addFlashAttribute("error", "Only the following formats are allowed: jpeg, jpg, png");
                 return "redirect:/edit";
             }
-            try {
-                // Get the file and save it somewhere
-                byte[] bytes = avatar.getBytes();
-                String property = System.getProperty("user.dir");
-                String fileName = "avatar_" + userEntity.getId() + this.getFileExtension(avatar.getOriginalFilename());
-                Path path = Paths.get(property + "/src/main/resources/static/avatars/" + fileName);
-                Files.write(path, bytes);
-                userEntity.setAvatar(fileName);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
 
         if (!userProfileEditBindingModel.getNewUsername().equals("")) {
@@ -164,6 +159,16 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             }
             userEntity.setUsername(userProfileEditBindingModel.getNewUsername());
         }
+
+        try {
+            if (!avatar.getOriginalFilename().equals("")) {
+
+                userEntity.setAvatar(this.cloudService.upload(avatar));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         this.userRepository.saveAndFlush(userEntity);
 
         redirectAttributes.addFlashAttribute("success", "Profile successfully edited!");

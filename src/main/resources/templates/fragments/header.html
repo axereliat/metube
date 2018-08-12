@@ -1,23 +1,35 @@
 <nav class="navbar navbar-expand-lg bg-secondary fixed-top text-uppercase" id="mainNav">
     <div class="container">
-        <a class="navbar-brand js-scroll-trigger" href="/">Metube</a>
-        <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <img src="/images/tv.png" width="5%" height="5%" alt="MeTube"/>
+        &nbsp;
+        <a class="navbar-brand js-scroll-trigger" href="/">
+            Metube
+        </a>
+        <button class="navbar-toggler navbar-toggler-right text-uppercase bg-primary text-white rounded" type="button"
+                data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive"
+                aria-expanded="false" aria-label="Toggle navigation">
             Menu
             <i class="fa fa-bars"></i>
         </button>
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/videos/upload" sec:authorize="isAuthenticated()">Upload Video</a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/videos/upload"
+                       sec:authorize="isAuthenticated()">Upload Video</a>
                 </li>
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" th:href="@{/profile/{id}(id=${user.id})}" sec:authorize="isAuthenticated()">Profile</a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
+                       th:href="@{/profile/{id}(id=${user.id})}" sec:authorize="isAuthenticated()">Profile</a>
                 </li>
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/notifications/" sec:authorize="isAuthenticated()">Notifications<span id="notification-count" class="badge badge-light" th:text="${user.notifications.size()}"></span></a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/notifications/"
+                       sec:authorize="isAuthenticated()">Notifications<span id="notification-count"
+                                                                            class="badge badge-light"
+                                                                            th:text="${user.notifications.size()}"></span></a>
                 </li>
                 <li class="nav-item dropdown mt-2" sec:authorize="hasAuthority('ADMIN')">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
                         Admin
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
@@ -26,13 +38,16 @@
                     </div>
                 </li>
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/register" sec:authorize="isAnonymous()">Register</a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/register"
+                       sec:authorize="isAnonymous()">Register</a>
                 </li>
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/login" sec:authorize="isAnonymous()">Login</a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/login"
+                       sec:authorize="isAnonymous()">Login</a>
                 </li>
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger btn btn-danger" href="/logout" sec:authorize="isAuthenticated()">Logout</a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger btn btn-danger" href="/logout"
+                       sec:authorize="isAuthenticated()">Logout</a>
                 </li>
             </ul>
         </div>

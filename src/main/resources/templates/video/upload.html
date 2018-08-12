@@ -18,6 +18,11 @@
                 <div class="form-group">
                     <label class="custom-control-label" for="title">Youtube link: </label>
                     <input type="text" name="link" id="link" class="form-control" placeholder="Youtube link..." th:value="${video.link}"/> <br/>
+                    <strong style="color:red" id="youtubeValidation"></strong>
+                    <iframe class="embed-responsive-item"
+                            id="ytplayerSide"
+                            src=""
+                            visibil></iframe>
                 </div>
                 <div class="form-group">
                     <label class="custom-control-label" for="tagStr">Tags (comma separated): </label>
@@ -35,3 +40,27 @@
         </div>
     </form>
 </div>
+
+<script>
+    (function ($) {
+        $(function () {
+            $('#ytplayerSide').hide();
+            $('#link').on('input', function (e) {
+                var url = $(this).val();
+                if (url != undefined || url != '') {
+                    var regExp = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/watch\?v=(.+)$/gm;
+                    var match = regExp.exec(url);
+                    if (match) {
+                        $('#ytplayerSide').show();
+                        $('#ytplayerSide').attr('src', 'https://www.youtube.com/embed/' + match[4] + '?autoplay=0');
+                        $('#youtubeValidation').html('');
+                    }
+                    else {
+                        $('#ytplayerSide').hide();
+                        $('#youtubeValidation').html('Invalid youtube url!');
+                    }
+                }
+            });
+        })
+    })(jQuery)
+</script>
