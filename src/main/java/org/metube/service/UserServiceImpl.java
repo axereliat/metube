@@ -107,8 +107,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         BCryptPasswordEncoder bCryptPasswordEncoder = new BCryptPasswordEncoder();
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
 
-        Role role = this.roleRepository.findByName("USER");
-        user.addRole(role);
+        if (this.roleRepository.findAll().size() == 0) {
+            Role roleUser = new Role();
+            roleUser.setName("USER");
+            Role roleAdmin = new Role();
+            roleUser.setName("ADMIN");
+            this.roleRepository.save(roleUser);
+            this.roleRepository.save(roleAdmin);
+        }
+
+        Role roleUser = this.roleRepository.findByName("USER");
+        Role roleAdmin = this.roleRepository.findByName("ADMIN");
+
+        if (this.userRepository.findAll().size() == 0) {
+            user.addRole(roleAdmin);
+        }
+        user.addRole(roleUser);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         LocalDate parsedDate = LocalDate.parse(userRegisterBindingModel.getBirthdate(), formatter);
