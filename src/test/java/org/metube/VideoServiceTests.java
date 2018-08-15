@@ -2,6 +2,7 @@ package org.metube;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.metube.bindingModel.VideoUploadBindingModel;
 import org.metube.repository.*;
 import org.metube.service.*;
 
@@ -20,13 +21,14 @@ public class VideoServiceTests {
         UserRepository userRepository = mock(UserRepository.class);
         RoleRepository roleRepository = mock(RoleRepository.class);
         CloudService cloudService = mock(CloudService.class);
-        UserService userService = new UserServiceImpl(cloudService, userRepository, roleRepository);
+        RecaptchaService recaptchaService = mock(RecaptchaService.class);
+        UserService userService = new UserServiceImpl(cloudService, userRepository, roleRepository, recaptchaService);
         this.videoService = new VideoServiceImpl(videoRepository, userService, categoryRepository, tagRepository);
     }
 
     @Test
     public void upload_video_shouldRedirectOnErrors() {
-        //this.videoService.
-        assertEquals(1, 2);
+        VideoUploadBindingModel videoUploadBindingModel = new VideoUploadBindingModel();
+        //this.videoService.uploadVideo(videoUploadBindingModel, moc)
     }
 }

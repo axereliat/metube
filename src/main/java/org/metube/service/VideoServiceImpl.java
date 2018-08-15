@@ -164,7 +164,7 @@ public class VideoServiceImpl implements VideoService {
 
         this.videoRepository.deleteById(video.getId());
 
-        redirectAttributes.addFlashAttribute("success", "You have successfully deleted your video,");
+        redirectAttributes.addFlashAttribute("success", "You have successfully deleted your video.");
 
         return "redirect:/videos/" + video.getCategory().getId();
     }

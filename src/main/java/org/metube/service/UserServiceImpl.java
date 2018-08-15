@@ -1,5 +1,6 @@
 package org.metube.service;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.metube.bindingModel.UserEditBindingModel;
 import org.metube.bindingModel.UserProfileEditBindingModel;
 import org.metube.bindingModel.UserRegisterBindingModel;
@@ -24,9 +25,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.transaction.Transactional;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
@@ -45,11 +43,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     private final RoleRepository roleRepository;
 
+    private final RecaptchaService recaptchaService;
+
     @Autowired
-    public UserServiceImpl(CloudService cloudService, UserRepository userRepository, RoleRepository roleRepository) {
+    public UserServiceImpl(CloudService cloudService, UserRepository userRepository, RoleRepository roleRepository, RecaptchaService recaptchaService) {
         this.cloudService = cloudService;
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
+        this.recaptchaService = recaptchaService;
     }
 
     private String getFileExtension(String originalFilename) {
@@ -59,8 +60,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public String registerUser(UserRegisterBindingModel userRegisterBindingModel, MultipartFile avatar, RedirectAttributes redirAttrs) {
+    public String registerUser(UserRegisterBindingModel userRegisterBindingModel, MultipartFile avatar, RedirectAttributes redirAttrs, String gRecaptchaResponse, HttpServletRequest httpServletRequest) {
         String error = null;
+
+        if (this.recaptchaService.verifyRecaptcha(httpServletRequest.getRemoteAddr(), gRecaptchaResponse) != null) {
+            error = "Please verify that you are not a robot.";
+            redirAttrs.addFlashAttribute("error", error);
+
+            return "redirect:/register";
+        }
 
         if (userRegisterBindingModel.getUsername().equals("") || userRegisterBindingModel.getPassword().equals("") || userRegisterBindingModel.getBirthdate().equals("")) {
             error = "Please fill in all fields.";

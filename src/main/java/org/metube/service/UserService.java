@@ -1,10 +1,10 @@
 package org.metube.service;
 
+import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.metube.bindingModel.UserEditBindingModel;
 import org.metube.bindingModel.UserProfileEditBindingModel;
 import org.metube.bindingModel.UserRegisterBindingModel;
 import org.metube.entity.User;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface UserService {
 
-    String registerUser(UserRegisterBindingModel userRegisterBindingModel, MultipartFile avatar, RedirectAttributes redirAttrs);
+    String registerUser(UserRegisterBindingModel userRegisterBindingModel, MultipartFile avatar, RedirectAttributes redirAttrs, String gRecaptchaResponse, HttpServletRequest httpServletRequest);
 
     User findById(Integer id);
 
