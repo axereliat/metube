@@ -93,6 +93,12 @@
             <artifactId>cloudinary</artifactId>
             <version>1.0.2</version>
         </dependency>
+
+        <dependency>
+            <groupId>com.sparkpost</groupId>
+            <artifactId>sparkpost-lib</artifactId>
+            <version>0.21</version>
+        </dependency>
     </dependencies>
 
     <build>
