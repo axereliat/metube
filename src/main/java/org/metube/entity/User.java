@@ -161,7 +161,7 @@ public class User {
     public boolean isAdmin() {
         return this.getRoles()
                 .stream()
-                .allMatch(role -> role.getName().equals("ADMIN"));
+                .anyMatch(role -> role.getName().equals("ADMIN"));
     }
 
     @Transient
