@@ -85,7 +85,7 @@ public class VideoServiceImpl implements VideoService {
 
         video.setTags(tags);
 
-        video.setId(this.videoRepository.findAll().get(this.videoRepository.findAll().size() - 1).getId() + 1);
+        //video.setId(this.videoRepository.findAll().get(this.videoRepository.findAll().size() - 1).getId() + 1);
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();

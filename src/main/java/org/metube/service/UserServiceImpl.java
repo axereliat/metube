@@ -119,7 +119,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Role roleUser = this.roleRepository.findByName("USER");
         Role roleAdmin = this.roleRepository.findByName("ADMIN");
 
-        if (this.userRepository.findAll().size() == 2) {
+        if (this.userRepository.findAll().size() == 0) {
             user.addRole(roleAdmin);
         }
         user.addRole(roleUser);
