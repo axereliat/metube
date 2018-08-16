@@ -1,5 +1,5 @@
 <div class="jumbotron">
-    <form th:action="@{/videos/upload}" method="post">
+    <form  method="post">
         <div class="row">
             <div class="col-md-6 offset-md-3">
                 <h1>Upload Video</h1>
@@ -39,27 +39,3 @@
         </div>
     </form>
 </div>
-
-<script>
-    (function ($) {
-        $(function () {
-            $('#ytplayerSide').hide();
-            $('#link').on('input', function (e) {
-                var url = $(this).val();
-                if (url != undefined || url != '') {
-                    var regExp = /^(https?\:\/\/)?((www\.)?youtube\.com|youtu\.?be)\/watch\?v=(.+)$/gm;
-                    var match = regExp.exec(url);
-                    if (match) {
-                        $('#ytplayerSide').show();
-                        $('#ytplayerSide').attr('src', 'https://www.youtube.com/embed/' + match[4] + '?autoplay=0');
-                        $('#youtubeValidation').html('');
-                    }
-                    else {
-                        $('#ytplayerSide').hide();
-                        $('#youtubeValidation').html('Invalid youtube url!');
-                    }
-                }
-            });
-        })
-    })(jQuery)
-</script>
