@@ -16,6 +16,9 @@ public class BeanConfig {
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+        mailSender.setHost("smtp.mailtrap.io");
+        mailSender.setUsername("0268e3c634130b");
+        mailSender.setPassword("cc146fde29a5a6");
 
         return mailSender;
     }
