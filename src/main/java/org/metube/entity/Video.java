@@ -38,6 +38,7 @@ public class Video {
         this.tags = new HashSet<>();
     }
 
+    @Id
     public String getId() {
         return id;
     }
