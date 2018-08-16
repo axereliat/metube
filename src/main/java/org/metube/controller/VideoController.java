@@ -132,16 +132,18 @@ public class VideoController {
     }
 
 
+    @PreAuthorize("isAuthenticated()")
     @GetMapping("/upload")
     public String upload(Model model) {
         model.addAttribute("title", "Upload video");
         model.addAttribute("video", new VideoUploadBindingModel());
         model.addAttribute("categories", this.categoryService.findAll());
-        model.addAttribute("view", "/video/upload");
+        model.addAttribute("view", "video/upload");
 
         return "base-layout";
     }
 
+    @PreAuthorize("isAuthenticated()")
     @PostMapping("/upload")
     public String uploadProcess(@Valid @ModelAttribute VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes) {
         return videoService.uploadVideo(videoUploadBindingModel, bindingResult, redirectAttributes);
