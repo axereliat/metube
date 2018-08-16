@@ -151,7 +151,7 @@ public class VideoController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/details/{id}")
-    public String details(Model model, @PathVariable Integer id, Integer category, Principal principal) {
+    public String details(Model model, @PathVariable String id, Integer category, Principal principal) {
         Video video = this.videoService.findVideoById(id);
 
         video.incrementViews();
@@ -171,7 +171,7 @@ public class VideoController {
     }
 
     @RequestMapping(value="/details/{id}", method=RequestMethod.POST, produces=MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody Map<String, String> addingCommentProcess(Model model, @PathVariable Integer id, Integer category, String comment) {
+    public @ResponseBody Map<String, String> addingCommentProcess(Model model, @PathVariable String id, Integer category, String comment) {
         Video video = this.videoService.findVideoById(id);
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
@@ -210,7 +210,7 @@ public class VideoController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/comments/delete/{commentId}/{videoId}/{categoryId}", produces = "application/json")
-    public @ResponseBody Map<String, String> deleteComment(RedirectAttributes redirectAttributes, @PathVariable Integer commentId, @PathVariable Integer videoId, @PathVariable Integer categoryId) {
+    public @ResponseBody Map<String, String> deleteComment(RedirectAttributes redirectAttributes, @PathVariable Integer commentId, @PathVariable String videoId, @PathVariable Integer categoryId) {
         Video video = this.videoService.findVideoById(videoId);
         if (video == null) {
             throw new ResourceNotFoundException();
@@ -247,7 +247,7 @@ public class VideoController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping(value = "/likes/{videoId}/{categoryId}", produces = "application/json")
-    public @ResponseBody Map<String, String> likeVideo(RedirectAttributes redirectAttributes, @PathVariable Integer videoId, @PathVariable Integer categoryId) {
+    public @ResponseBody Map<String, String> likeVideo(RedirectAttributes redirectAttributes, @PathVariable String videoId, @PathVariable Integer categoryId) {
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
         User userEntity = this.userRepository.findByUsername(user.getUsername());
@@ -278,7 +278,7 @@ public class VideoController {
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/edit/{id}")
-    public String edit(Model model, @PathVariable Integer id) {
+    public String edit(Model model, @PathVariable String id) {
         Video video = this.videoService.findVideoById(id);
 
         VideoEditViewModel videoEditViewModel = new VideoEditViewModel();
@@ -300,13 +300,13 @@ public class VideoController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/edit/{id}")
-    public String editProcess(@Valid @ModelAttribute VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable Integer id) {
+    public String editProcess(@Valid @ModelAttribute VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, @PathVariable String id) {
         return this.videoService.editVideo(videoUploadBindingModel, bindingResult, redirectAttributes, id);
     }
 
     @PreAuthorize("isAuthenticated()")
     @GetMapping("/delete/{id}")
-    public String delete(Model model, @PathVariable Integer id) {
+    public String delete(Model model, @PathVariable String id) {
         Video video = this.videoService.findVideoById(id);
 
         VideoEditViewModel videoEditViewModel = new VideoEditViewModel();
@@ -328,7 +328,7 @@ public class VideoController {
 
     @PreAuthorize("isAuthenticated()")
     @PostMapping("/delete/{id}")
-    public String deleteProcess(VideoUploadBindingModel videoUploadBindingModel, RedirectAttributes redirectAttributes, @PathVariable Integer id) {
+    public String deleteProcess(VideoUploadBindingModel videoUploadBindingModel, RedirectAttributes redirectAttributes, @PathVariable String id) {
         return this.videoService.deleteVideo(videoUploadBindingModel, redirectAttributes, id);
     }
 }

@@ -2,7 +2,7 @@ package org.metube.viewModel;
 
 public class VideoEditViewModel {
 
-    private Integer id;
+    private String id;
 
     private String title;
 
@@ -12,11 +12,11 @@ public class VideoEditViewModel {
 
     private String tagStr;
 
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

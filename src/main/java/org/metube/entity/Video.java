@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 @Table(name = "videos")
 public class Video {
 
-    private Integer id;
+    private String id;
 
     private String title;
 
@@ -38,13 +38,11 @@ public class Video {
         this.tags = new HashSet<>();
     }
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    public Integer getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(String id) {
         this.id = id;
     }
 

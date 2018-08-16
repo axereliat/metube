@@ -12,15 +12,15 @@ public interface VideoService {
 
     String uploadVideo(VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes);
 
-    void deleteVideoById(Integer id);
+    void deleteVideoById(String id);
 
-    Video findVideoById(Integer id);
+    Video findVideoById(String id);
 
     List<Video> findAllVideos();
 
-    String editVideo(VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, Integer id);
+    String editVideo(VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, String id);
 
-    String deleteVideo(VideoUploadBindingModel videoUploadBindingModel, RedirectAttributes redirectAttributes, Integer id);
+    String deleteVideo(VideoUploadBindingModel videoUploadBindingModel, RedirectAttributes redirectAttributes, String id);
 
     Map<String, String> likeVideo(RedirectAttributes redirectAttributes, Integer videoId, Integer categoryId);
 }

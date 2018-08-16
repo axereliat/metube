@@ -86,6 +86,7 @@ public class VideoServiceImpl implements VideoService {
         video.setTags(tags);
 
         //video.setId(this.videoRepository.findAll().get(this.videoRepository.findAll().size() - 1).getId() + 1);
+        video.setId(UUID.randomUUID().toString());
 
         UserDetails user = (UserDetails) SecurityContextHolder.getContext()
                 .getAuthentication().getPrincipal();
@@ -102,7 +103,7 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public String editVideo(VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, Integer id) {
+    public String editVideo(VideoUploadBindingModel videoUploadBindingModel, BindingResult bindingResult, RedirectAttributes redirectAttributes, String id) {
         List<String> errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
         if (errors.size() > 0) {
             VideoEditViewModel videoEditViewModel = new VideoEditViewModel();
@@ -147,7 +148,7 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public String deleteVideo(VideoUploadBindingModel videoUploadBindingModel, RedirectAttributes redirectAttributes, Integer id) {
+    public String deleteVideo(VideoUploadBindingModel videoUploadBindingModel, RedirectAttributes redirectAttributes, String id) {
         Video video = this.findVideoById(id);
 
         if (video == null) {
@@ -170,12 +171,12 @@ public class VideoServiceImpl implements VideoService {
     }
 
     @Override
-    public void deleteVideoById(Integer id) {
+    public void deleteVideoById(String id) {
         this.videoRepository.deleteById(id);
     }
 
     @Override
-    public Video findVideoById(Integer id) {
+    public Video findVideoById(String id) {
         Optional<Video> videoOptional = this.videoRepository.findById(id);
         if (!videoOptional.isPresent()) {
             throw new ResourceNotFoundException();
