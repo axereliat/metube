@@ -37,6 +37,9 @@ public class UserAddInterceptor implements HandlerInterceptor {
                 User userEntity = this.userService.findByUsername(user.getUsername());
 
                 modelAndView.getModel().put("user", userEntity);
+            } else {
+                User user = new User();
+                modelAndView.getModel().put("user", user);
             }
         }
     }

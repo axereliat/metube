@@ -17,13 +17,13 @@
                     <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/videos/upload"
                        sec:authorize="isAuthenticated()">Upload Video</a>
                 </li>
-                <li class="nav-item mx-0 mx-lg-1">
+                <li class="nav-item mx-0 mx-lg-1" sec:authorize="isAuthenticated()">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger"
-                       th:href="@{/profile/{id}(id=${user.id})}" sec:authorize="isAuthenticated()">Profile</a>
+                       th:href="@{/profile/{id}(id=${user.id})}">Profile</a>
                 </li>
-                <li class="nav-item mx-0 mx-lg-1">
+                <li class="nav-item mx-0 mx-lg-1" sec:authorize="isAuthenticated()">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="/notifications/"
-                       sec:authorize="isAuthenticated()">Notifications<span id="notification-count"
+                       >Notifications<span id="notification-count"
                                                                             class="badge badge-light"
                                                                             th:text="${user.notifications.size()}"></span></a>
                 </li>
