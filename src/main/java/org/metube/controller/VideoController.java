@@ -271,7 +271,13 @@ public class VideoController {
 
         Map<String, String> map = new HashMap<>();
         map.put("liked", userEntity.hasLikedVideo(video) ? "1" : "0");
-        map.put("likesCount", String.valueOf(video.getUsersLiked().size()));
+        int size = 0;
+        if (userEntity.hasLikedVideo(video)) {
+            size = video.getUsersLiked().size() - 1;
+        } else {
+            size = video.getUsersLiked().size() + 1;
+        }
+        map.put("likesCount", String.valueOf(size));
         return map;
         //return this.videoService.likeVideo(redirectAttributes, videoId, categoryId);
     }
