@@ -8,30 +8,29 @@
                 </th:block>-->
                 <div class="form-group">
                     <label for="title" class="custom-control-label">Title: </label>
-                    <input type="text" class="form-control" name="title" id="title" placeholder="Title..." th:value="${video.title}"/> <br/>
+                    <input type="text" class="form-control" name="title" id="title" placeholder="Title..." /> <br/>
                 </div>
                 <div class="form-group">
                     <label for="description">Description: </label>
-                    <textarea class="form-control" rows="6" id="description" placeholder="Description..." th:value="${video.description}"
+                    <textarea class="form-control" rows="6" id="description" placeholder="Description..."
                               name="description"></textarea>
                 </div>
                 <div class="form-group">
                     <label class="custom-control-label" for="title">Youtube link: </label>
-                    <input type="text" name="link" id="link" class="form-control" placeholder="Youtube link..." th:value="${video.link}"/> <br/>
+                    <input type="text" name="link" id="link" class="form-control" placeholder="Youtube link..." /> <br/>
                     <strong style="color:red" id="youtubeValidation"></strong>
                     <iframe class="embed-responsive-item"
                             id="ytplayerSide"
-                            src=""
-                            visibil></iframe>
+                            src=""></iframe>
                 </div>
                 <div class="form-group">
                     <label class="custom-control-label" for="tagStr">Tags (comma separated): </label>
-                    <input type="text" name="tagStr" id="tagStr" class="form-control" placeholder="Tags..." th:value="${video.tagStr}"/> <br/>
+                    <input type="text" name="tagStr" id="tagStr" class="form-control" placeholder="Tags..." /> <br/>
                 </div>
                 <div class="form-group">
                     Category: <select class="form-control" id="categoryId" name="categoryId">
-                    <option th:each="category : ${categories}" th:value="${category.id}"
-                            th:text="${category.name}"></option>
+                    <!--<option th:each="category : ${categories}" th:value="${category.id}"
+                            th:text="${category.name}"></option>-->
                 </select>
                 </div>
                 <a href="/" class="btn btn-secondary">Cancel</a>
