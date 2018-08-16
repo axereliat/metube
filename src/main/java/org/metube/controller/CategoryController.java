@@ -26,7 +26,7 @@ public class CategoryController {
     @GetMapping("/")
     public String list(Model model) {
         model.addAttribute("categories", this.categoryService.findAll());
-        model.addAttribute("view", "/admin/category/list");
+        model.addAttribute("view", "admin/category/list");
 
         return "base-layout";
     }
@@ -34,7 +34,7 @@ public class CategoryController {
     @GetMapping("/create")
     public String create(Model model) {
         model.addAttribute("title", "Add category");
-        model.addAttribute("view", "/admin/category/create");
+        model.addAttribute("view", "admin/category/create");
 
         return "base-layout";
     }
@@ -52,7 +52,7 @@ public class CategoryController {
 
         model.addAttribute("title", "Delete category");
         model.addAttribute("category", category);
-        model.addAttribute("view", "/admin/category/delete");
+        model.addAttribute("view", "admin/category/delete");
 
         return "base-layout";
     }
@@ -72,7 +72,7 @@ public class CategoryController {
 
         model.addAttribute("title", "Edit category");
         model.addAttribute("category", category);
-        model.addAttribute("view", "/admin/category/edit");
+        model.addAttribute("view", "admin/category/edit");
 
         return "base-layout";
     }

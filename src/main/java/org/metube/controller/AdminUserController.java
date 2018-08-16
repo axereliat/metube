@@ -34,7 +34,7 @@ public class AdminUserController {
     @GetMapping("/")
     public String list(Model model) {
         model.addAttribute("users", this.userService.findAll());
-        model.addAttribute("view", "/admin/user/list");
+        model.addAttribute("view", "admin/user/list");
 
         return "base-layout";
     }
@@ -44,7 +44,7 @@ public class AdminUserController {
         User user = this.userService.findById(id);
 
         model.addAttribute("currentUserToDelete", user);
-        model.addAttribute("view", "/admin/user/delete");
+        model.addAttribute("view", "admin/user/delete");
 
         return "base-layout";
     }

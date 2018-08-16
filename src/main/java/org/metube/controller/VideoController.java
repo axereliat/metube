@@ -110,7 +110,7 @@ public class VideoController {
         List<Video> allVideosByCategory = this.videoService.findAllVideos().stream()
                 .filter(x -> x.getCategory().getId().equals(id) && (x.getTags().stream().filter(y -> y.getName().toLowerCase().contains(srch)).count() > 0 || x.getTitle().toLowerCase().contains(srch)))
                 .sorted(comparator)
-                .collect(Collectors.toList());;
+                .collect(Collectors.toList());
 
         List<Video> videos = allVideosByCategory.stream()
                 .skip(VIDEOS_PER_PAGE * (page - 1))
@@ -126,7 +126,7 @@ public class VideoController {
         model.addAttribute("categoryId", id);
         model.addAttribute("videos", videos);
         model.addAttribute("pages", pages);
-        model.addAttribute("view", "/video/list");
+        model.addAttribute("view", "video/list");
 
         return "base-layout";
     }
@@ -165,7 +165,7 @@ public class VideoController {
         model.addAttribute("comments", comments);
         model.addAttribute("categoryId", category);
         model.addAttribute("video", video);
-        model.addAttribute("view", "/video/details");
+        model.addAttribute("view", "video/details");
 
         return "base-layout";
     }
@@ -293,7 +293,7 @@ public class VideoController {
         model.addAttribute("title", "Edit video");
         model.addAttribute("video", videoEditViewModel);
         model.addAttribute("categories", this.categoryService.findAll());
-        model.addAttribute("view", "/video/edit");
+        model.addAttribute("view", "video/edit");
 
         return "base-layout";
     }
@@ -321,7 +321,7 @@ public class VideoController {
         model.addAttribute("title", "Delete video");
         model.addAttribute("video", videoEditViewModel);
         model.addAttribute("categories", this.categoryService.findAll());
-        model.addAttribute("view", "/video/delete");
+        model.addAttribute("view", "video/delete");
 
         return "base-layout";
     }
