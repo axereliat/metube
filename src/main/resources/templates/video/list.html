@@ -23,7 +23,9 @@
         </div>
     </div>
 
-    <img src="/images/loading.gif" id="pleaseWait" alt="Loading">
+    <div class="row">
+        <img class="col-md-6 offset-md-3" src="/images/loading.gif" width="2%" height="2%" id="pleaseWait" alt="Loading">
+    </div>
     <div id="videos" class="row">
         <th:block th:each="video : ${videos}" th:if="${videos.size() > 0}">
             <div class="col-md-4">
