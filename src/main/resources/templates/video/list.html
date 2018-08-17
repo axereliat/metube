@@ -23,6 +23,7 @@
         </div>
     </div>
     <div id="videos" class="row">
+        <p id="pleaseWait">Please wait...</p>
         <th:block th:each="video : ${videos}" th:if="${videos.size() > 0}">
             <div class="col-md-4">
                 <a th:href="@{/videos/details/{id}?category={categoryId}(id=${video.id},categoryId=${video.getCategory().getId()})}">
@@ -51,14 +52,17 @@
     // document ready function
     (function ($) {
         $(function () {
+            $('#pleaseWait').hide();
+
             $("a[id^=page]").on('click', function (e) {
                 e.preventDefault();
+                $('#videos').empty();
+                $('#pleaseWait').show();
                 $.ajax({
                     method: 'get',
                     url: "/api" + $(this).attr('href'),
                     dataType: 'json',
                     success: function (res) {
-                        $('#videos').empty();
                         for (var i = 0; i < res.length; i++) {
                             var video = res[i];
                             $('#videos').append(
@@ -72,6 +76,9 @@
                     },
                     error: function (err) {
                         console.log(err);
+                    },
+                    complete: function () {
+                        $('#pleaseWait').hide();
                     }
                 });
             });
