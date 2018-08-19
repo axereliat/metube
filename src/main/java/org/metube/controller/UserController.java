@@ -133,11 +133,11 @@ public class UserController {
         RandomString randomString = new RandomString(7);
         String newPassword = randomString.nextString();
 
-        this.emailService.sendSimpleMessage(email, "Your new password for MeTube", "Your new password is: " + newPassword);
+        this.emailService.sendSimpleMessage(email, "Your new password for MeTube", "Hello, " + username + "! Your new password is: " + newPassword);
 
-        User user = this.userService.findByUsername(username);
+        User user = this.userService.findByUsernameAndEmail(username, email);
         if (user == null) {
-            redirectAttributes.addFlashAttribute("error", "Wrong username!");
+            redirectAttributes.addFlashAttribute("error", "Wrong username or email!");
 
             return "redirect:/forgotPassword";
         }

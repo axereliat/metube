@@ -24,6 +24,8 @@ public interface UserService {
 
     User findByUsername(String username);
 
+    User findByUsernameAndEmail(String username, String email);
+
     String editUser(UserProfileEditBindingModel userProfileEditBindingModel, RedirectAttributes redirectAttributes, MultipartFile avatar);
 
     String adminEditUser(UserEditBindingModel userEditBindingModel, Integer id);

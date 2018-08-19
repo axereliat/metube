@@ -70,7 +70,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return "redirect:/register";
         }
 
-        if (userRegisterBindingModel.getUsername().equals("") || userRegisterBindingModel.getPassword().equals("") || userRegisterBindingModel.getBirthdate().equals("")) {
+        User userByEmail = this.userRepository.findByEmail(userRegisterBindingModel.getEmail());
+        if (userByEmail != null) {
+            error = "Email is already taken.";
+            redirAttrs.addFlashAttribute("error", error);
+
+            return "redirect:/register";
+        }
+
+        if (userRegisterBindingModel.getUsername().equals("") || userRegisterBindingModel.getPassword().equals("") || userRegisterBindingModel.getBirthdate().equals("") || userRegisterBindingModel.getEmail().equals("")) {
             error = "Please fill in all fields.";
             redirAttrs.addFlashAttribute("error", error);
             redirAttrs.addFlashAttribute("username", userRegisterBindingModel.getUsername());
@@ -243,6 +251,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public User findByUsername(String username) {
         return this.userRepository.findByUsername(username);
+    }
+
+    @Override
+    public User findByUsernameAndEmail(String username, String email) {
+        return this.userRepository.findByUsernameAndEmail(username, email);
     }
 
     @Override

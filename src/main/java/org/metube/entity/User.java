@@ -17,6 +17,8 @@ public class User {
 
     private String password;
 
+    private String email;
+
     private LocalDate birthdate;
 
     private Gender gender;
@@ -71,6 +73,15 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    //@Column(unique = true)
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public LocalDate getBirthdate() {
