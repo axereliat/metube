@@ -121,7 +121,7 @@ public class Video {
         this.usersLiked = usersLiked;
     }
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "videos_tags",
             joinColumns = @JoinColumn(name = "video_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id", referencedColumnName = "id"))

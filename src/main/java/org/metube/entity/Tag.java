@@ -37,7 +37,7 @@ public class Tag {
         this.name = name;
     }
 
-    @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy = "tags", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     public Set<Video> getVideos() {
         return videos;
     }
