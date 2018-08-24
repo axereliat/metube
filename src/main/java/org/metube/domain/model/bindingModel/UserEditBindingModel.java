@@ -1,4 +1,4 @@
-package org.metube.bindingModel;
+package org.metube.domain.model.bindingModel;
 
 import java.util.ArrayList;
 import java.util.List;

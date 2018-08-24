@@ -2,7 +2,7 @@ package org.metube;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.metube.bindingModel.VideoUploadBindingModel;
+import org.metube.domain.model.bindingModel.VideoUploadBindingModel;
 import org.metube.repository.*;
 import org.metube.service.*;
 

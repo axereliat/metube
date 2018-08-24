@@ -1,4 +1,4 @@
-package org.metube.bindingModel;
+package org.metube.domain.model.bindingModel;
 
 public class UserProfileEditBindingModel {
 

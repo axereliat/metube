@@ -1,10 +1,10 @@
-package org.metube.controller;
+package org.metube.web.controller;
 
-import org.metube.entity.User;
-import org.metube.entity.Video;
+import org.metube.domain.entity.User;
+import org.metube.domain.entity.Video;
 import org.metube.service.UserService;
 import org.metube.service.VideoService;
-import org.metube.viewModel.VideoListViewModel;
+import org.metube.domain.model.viewModel.VideoListViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;

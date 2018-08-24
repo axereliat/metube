@@ -1,10 +1,9 @@
-package org.metube.entity;
+package org.metube.domain.entity;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Entity
 @Table(name = "videos")

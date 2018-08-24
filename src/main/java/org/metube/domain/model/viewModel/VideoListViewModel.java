@@ -1,4 +1,4 @@
-package org.metube.viewModel;
+package org.metube.domain.model.viewModel;
 
 public class VideoListViewModel {
 

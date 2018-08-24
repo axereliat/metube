@@ -1,7 +1,7 @@
 package org.metube.service;
 
-import org.metube.bindingModel.CategoryCreateBindingModel;
-import org.metube.entity.Category;
+import org.metube.domain.model.bindingModel.CategoryCreateBindingModel;
+import org.metube.domain.entity.Category;
 import org.metube.exception.ResourceNotFoundException;
 import org.metube.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;

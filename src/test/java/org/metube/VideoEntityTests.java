@@ -1,8 +1,9 @@
 package org.metube;
 
-import static junit.framework.TestCase.*;
 import org.junit.Test;
-import org.metube.entity.Video;
+import org.metube.domain.entity.Video;
+
+import static org.junit.Assert.assertEquals;
 
 public class VideoEntityTests {
 

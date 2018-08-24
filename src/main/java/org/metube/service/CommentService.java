@@ -1,8 +1,6 @@
 package org.metube.service;
 
-import org.metube.entity.Comment;
-
-import java.util.List;
+import org.metube.domain.entity.Comment;
 
 public interface CommentService {
 

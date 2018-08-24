@@ -1,4 +1,4 @@
-package org.metube.entity;
+package org.metube.domain.entity;
 
 import org.metube.enumeration.Gender;
 

@@ -1,21 +1,21 @@
-package org.metube.entity;
+package org.metube.domain.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-@Table(name = "cateogries")
 @Entity
-public class Category {
+@Table(name = "roles")
+public class Role {
 
     private Integer id;
 
     private String name;
 
-    private Set<Video> videos;
+    private Set<User> users;
 
-    public Category() {
-        this.videos = new HashSet<>();
+    public Role() {
+        this.users = new HashSet<>();
     }
 
     @Id
@@ -28,6 +28,7 @@ public class Category {
         this.id = id;
     }
 
+    @Column(name = "name", nullable = false)
     public String getName() {
         return name;
     }
@@ -36,12 +37,12 @@ public class Category {
         this.name = name;
     }
 
-    @OneToMany(mappedBy = "category")
-    public Set<Video> getVideos() {
-        return videos;
+    @ManyToMany(mappedBy = "roles")
+    public Set<User> getUsers() {
+        return users;
     }
 
-    public void setVideos(Set<Video> videos) {
-        this.videos = videos;
+    public void setUsers(Set<User> users) {
+        this.users = users;
     }
 }

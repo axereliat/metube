@@ -1,15 +1,12 @@
-package org.metube.controller;
+package org.metube.web.controller;
 
-import org.metube.bindingModel.VideoUploadBindingModel;
-import org.metube.entity.*;
+import org.metube.domain.model.bindingModel.VideoUploadBindingModel;
+import org.metube.domain.entity.*;
 import org.metube.exception.ResourceNotFoundException;
 import org.metube.repository.UserRepository;
 import org.metube.service.*;
-import org.metube.viewModel.VideoEditViewModel;
-import org.metube.viewModel.VideoListViewModel;
-import org.modelmapper.ModelMapper;
+import org.metube.domain.model.viewModel.VideoEditViewModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,7 +17,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;

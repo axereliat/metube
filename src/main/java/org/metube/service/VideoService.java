@@ -1,7 +1,7 @@
 package org.metube.service;
 
-import org.metube.bindingModel.VideoUploadBindingModel;
-import org.metube.entity.Video;
+import org.metube.domain.model.bindingModel.VideoUploadBindingModel;
+import org.metube.domain.entity.Video;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 

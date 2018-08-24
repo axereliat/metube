@@ -1,9 +1,8 @@
-package org.metube.controller;
+package org.metube.web.controller;
 
-import org.metube.bindingModel.UserEditBindingModel;
-import org.metube.entity.Role;
-import org.metube.entity.User;
-import org.metube.exception.ResourceNotFoundException;
+import org.metube.domain.model.bindingModel.UserEditBindingModel;
+import org.metube.domain.entity.Role;
+import org.metube.domain.entity.User;
 import org.metube.service.RoleService;
 import org.metube.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,9 +12,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @Controller
 @RequestMapping("/admin/users")

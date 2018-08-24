@@ -1,7 +1,7 @@
-package org.metube.controller;
+package org.metube.web.controller;
 
-import org.metube.entity.Notification;
-import org.metube.entity.User;
+import org.metube.domain.entity.Notification;
+import org.metube.domain.entity.User;
 import org.metube.service.NotificationService;
 import org.metube.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;

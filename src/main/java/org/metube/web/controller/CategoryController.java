@@ -1,9 +1,8 @@
-package org.metube.controller;
+package org.metube.web.controller;
 
-import org.metube.bindingModel.CategoryCreateBindingModel;
-import org.metube.entity.Category;
+import org.metube.domain.model.bindingModel.CategoryCreateBindingModel;
+import org.metube.domain.entity.Category;
 import org.metube.service.CategoryService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

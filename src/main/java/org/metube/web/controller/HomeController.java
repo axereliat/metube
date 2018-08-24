@@ -1,4 +1,4 @@
-package org.metube.controller;
+package org.metube.web.controller;
 
 import org.metube.exception.ResourceNotFoundException;
 import org.metube.service.CategoryService;

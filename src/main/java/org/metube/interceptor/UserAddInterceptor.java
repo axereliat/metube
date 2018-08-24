@@ -1,6 +1,6 @@
 package org.metube.interceptor;
 
-import org.metube.entity.User;
+import org.metube.domain.entity.User;
 import org.metube.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;

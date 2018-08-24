@@ -1,11 +1,10 @@
-package org.metube.controller;
+package org.metube.web.controller;
 
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
-import org.metube.bindingModel.UserProfileEditBindingModel;
-import org.metube.bindingModel.UserRegisterBindingModel;
-import org.metube.entity.User;
-import org.metube.entity.Video;
-import org.metube.service.CloudService;
+import org.metube.domain.model.bindingModel.UserProfileEditBindingModel;
+import org.metube.domain.model.bindingModel.UserRegisterBindingModel;
+import org.metube.domain.entity.User;
+import org.metube.domain.entity.Video;
 import org.metube.service.EmailService;
 import org.metube.service.RoleService;
 import org.metube.service.UserService;

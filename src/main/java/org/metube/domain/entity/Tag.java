@@ -1,4 +1,4 @@
-package org.metube.entity;
+package org.metube.domain.entity;
 
 import javax.persistence.*;
 import java.util.HashSet;

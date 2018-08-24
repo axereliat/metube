@@ -5,7 +5,7 @@ import static junit.framework.TestCase.*;
 import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.junit.Before;
 import org.junit.Test;
-import org.metube.bindingModel.UserRegisterBindingModel;
+import org.metube.domain.model.bindingModel.UserRegisterBindingModel;
 import org.metube.repository.RoleRepository;
 import org.metube.repository.UserRepository;
 import org.metube.service.CloudService;

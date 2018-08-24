@@ -1,6 +1,6 @@
 package org.metube.service;
 
-import org.metube.entity.Notification;
+import org.metube.domain.entity.Notification;
 import org.metube.repository.NotificationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

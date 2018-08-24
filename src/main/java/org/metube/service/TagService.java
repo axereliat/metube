@@ -1,6 +1,6 @@
 package org.metube.service;
 
-import org.metube.entity.Tag;
+import org.metube.domain.entity.Tag;
 
 import java.util.List;
 
