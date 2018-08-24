@@ -149,7 +149,7 @@ public class VideoController {
         return videoService.uploadVideo(videoUploadBindingModel, bindingResult, redirectAttributes);
     }
 
-    @PreAuthorize("isAuthenticated()")
+    //@PreAuthorize("isAuthenticated()")
     @GetMapping("/details/{id}")
     public String details(Model model, @PathVariable String id, Integer category, Principal principal) {
         Video video = this.videoService.findVideoById(id);
@@ -158,7 +158,12 @@ public class VideoController {
 
         List<Comment> comments = video.getComments().stream().sorted((x1, x2) -> x2.getAddedOn().compareTo(x1.getAddedOn())).collect(Collectors.toList());
 
-        User userEntity = this.userRepository.findByUsername(principal.getName());
+        User userEntity = null;
+        try {
+            userEntity = this.userRepository.findByUsername(principal.getName());
+        } catch (Exception e) {
+
+        }
 
         model.addAttribute("title", "Details");
         model.addAttribute("currentUser", userEntity);
