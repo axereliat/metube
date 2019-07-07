@@ -59,7 +59,7 @@ public class EmailServiceImpl implements EmailService {
         //Establishing a session with required user details
         Session session = Session.getInstance(props, new javax.mail.Authenticator() {
             protected PasswordAuthentication getPasswordAuthentication() {
-                return new PasswordAuthentication("axereliat@gmail.com", "mario789");
+                return new PasswordAuthentication("axereliat@gmail.com", "*******");
             }
         });
         try {
