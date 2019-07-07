@@ -21,7 +21,7 @@ public class BeanConfig {
         mailSender.setPort(587);
 
         mailSender.setUsername("axereliat@gmail.com");
-        mailSender.setPassword("mario789");
+        mailSender.setPassword("******");
 
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", "smtp");
